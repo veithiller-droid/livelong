@@ -1,0 +1,337 @@
+/* ========================================
+   DR. LIVELONG - ANIMATIONS CSS
+   Alle Animationen & Keyframes
+   Version 1.0.0
+   ======================================== */
+
+/* ========================================
+   FLOATING CIRCLES BACKGROUND
+   ======================================== */
+.background-circles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  animation: float 20s infinite ease-in-out;
+  filter: blur(60px);
+}
+
+.circle-1 {
+  width: 500px;
+  height: 500px;
+  background: var(--color-coral);
+  top: -10%;
+  left: -5%;
+  animation-delay: 0s;
+}
+
+.circle-2 {
+  width: 400px;
+  height: 400px;
+  background: var(--color-turquoise);
+  top: 20%;
+  right: -5%;
+  animation-delay: 3s;
+}
+
+.circle-3 {
+  width: 600px;
+  height: 600px;
+  background: var(--color-yellow);
+  bottom: -15%;
+  left: 30%;
+  animation-delay: 6s;
+}
+
+.circle-4 {
+  width: 350px;
+  height: 350px;
+  background: var(--color-purple);
+  top: 50%;
+  left: -10%;
+  animation-delay: 9s;
+}
+
+.circle-5 {
+  width: 450px;
+  height: 450px;
+  background: var(--color-pink);
+  bottom: 10%;
+  right: 10%;
+  animation-delay: 12s;
+}
+
+.circle-6 {
+  width: 300px;
+  height: 300px;
+  background: var(--color-mint);
+  top: 60%;
+  right: 30%;
+  animation-delay: 15s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(40px, -60px) scale(1.1);
+  }
+  50% {
+    transform: translate(-30px, -40px) scale(0.9);
+  }
+  75% {
+    transform: translate(50px, 30px) scale(1.05);
+  }
+}
+
+/* ========================================
+   EMOJI BOUNCE
+   ======================================== */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.emoji-icon {
+  animation: bounce 2s infinite;
+}
+
+/* ========================================
+   PULSE ANIMATION (Buttons)
+   ======================================== */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+  }
+  50% {
+    box-shadow: 0 12px 40px rgba(255, 107, 107, 0.5);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* ========================================
+   SHIMMER (Progress Bar)
+   ======================================== */
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.progress-bar {
+  animation: shimmer 2s infinite;
+}
+
+/* ========================================
+   ROTATE IN (Donut Chart)
+   ======================================== */
+@keyframes rotate-in {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.donut-chart {
+  animation: rotate-in 1.5s ease-out;
+}
+
+/* ========================================
+   SPINNER
+   ======================================== */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* ========================================
+   FADE IN
+   ======================================== */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* ========================================
+   SLIDE IN FROM LEFT
+   ======================================== */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slide-in-left 0.5s ease-out;
+}
+
+/* ========================================
+   SLIDE IN FROM RIGHT
+   ======================================== */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slide-in-right 0.5s ease-out;
+}
+
+/* ========================================
+   SCALE IN
+   ======================================== */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scale-in 0.4s ease-out;
+}
+
+/* ========================================
+   BUBBLES (Decorative)
+   ======================================== */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  animation: rise 10s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.bubble-1 {
+  width: 40px;
+  height: 40px;
+  left: 10%;
+  bottom: -50px;
+  animation-delay: 0s;
+}
+
+.bubble-2 {
+  width: 60px;
+  height: 60px;
+  left: 80%;
+  bottom: -80px;
+  animation-delay: 2s;
+}
+
+.bubble-3 {
+  width: 30px;
+  height: 30px;
+  left: 50%;
+  bottom: -40px;
+  animation-delay: 4s;
+}
+
+@keyframes rise {
+  to {
+    bottom: 120%;
+    opacity: 0;
+  }
+}
+
+/* ========================================
+   SHAKE (Error)
+   ======================================== */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.shake {
+  animation: shake 0.5s ease-out;
+}
+
+/* ========================================
+   GLOW
+   ======================================== */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 107, 107, 0.6);
+  }
+}
+
+.glow {
+  animation: glow 2s infinite;
+}
+
+/* ========================================
+   RESPONSIVE ANIMATIONS
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .circle {
+    filter: blur(40px);
+  }
+}

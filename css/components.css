@@ -1,0 +1,482 @@
+/* ========================================
+   DR. LIVELONG - COMPONENTS CSS (FIXED)
+   Wiederverwendbare UI Components
+   Version 1.0.1 - Added Hero & Stats Sections
+   ======================================== */
+
+/* ========================================
+   HERO SECTION - NEW!
+   ======================================== */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: clamp(40px, 7vw, 72px);
+  margin-bottom: 24px;
+  line-height: 1.1;
+}
+
+.hero p {
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--text-medium);
+  margin-bottom: 40px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* ========================================
+   STATS SECTION - NEW!
+   ======================================== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1000px;
+  margin: 80px auto;
+  padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin: 60px auto;
+  }
+  
+  .hero {
+    padding: 60px 16px;
+  }
+}
+
+/* ========================================
+   FEATURES SECTION - NEW!
+   ======================================== */
+.features {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+.btn {
+  padding: 14px 32px;
+  border-radius: var(--radius-round);
+  border: none;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  display: inline-block;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(255, 107, 107, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--color-coral);
+  border: 2px solid var(--color-coral);
+}
+
+.btn-secondary:hover {
+  background: var(--color-coral);
+  color: white;
+  transform: translateY(-3px);
+}
+
+.btn-large {
+  padding: 20px 50px;
+  font-size: 20px;
+}
+
+.btn-small {
+  padding: 10px 24px;
+  font-size: 14px;
+}
+
+.btn-block {
+  width: 100%;
+  display: block;
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+.card {
+  background: var(--bg-light);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  border: 3px solid transparent;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-clickable {
+  cursor: pointer;
+}
+
+.card-coral {
+  border-color: var(--color-coral);
+}
+
+.card-coral:hover {
+  box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+}
+
+.card-turquoise {
+  border-color: var(--color-turquoise);
+}
+
+.card-turquoise:hover {
+  box-shadow: 0 20px 60px rgba(78, 205, 196, 0.3);
+}
+
+.card-mint {
+  border-color: var(--color-mint);
+}
+
+.card-mint:hover {
+  box-shadow: 0 20px 60px rgba(168, 230, 207, 0.3);
+}
+
+.card-purple {
+  border-color: var(--color-purple);
+}
+
+.card-purple:hover {
+  box-shadow: 0 20px 60px rgba(199, 163, 255, 0.4);
+}
+
+.card-yellow {
+  border-color: var(--color-yellow);
+}
+
+.card-yellow:hover {
+  box-shadow: 0 20px 60px rgba(255, 230, 109, 0.4);
+}
+
+/* Card Playful Tilt */
+.card-tilt-left:hover {
+  transform: translateY(-8px) rotate(-2deg);
+}
+
+.card-tilt-right:hover {
+  transform: translateY(-8px) rotate(2deg);
+}
+
+/* ========================================
+   STAT CARD
+   ======================================== */
+.stat-card {
+  text-align: center;
+}
+
+.stat-card .emoji-icon {
+  font-size: 64px;
+  display: block;
+  margin-bottom: var(--spacing-sm);
+}
+
+.stat-card h3 {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--text-dark);
+  margin-bottom: var(--spacing-xs);
+}
+
+.stat-card p {
+  color: var(--text-medium);
+  font-size: 14px;
+}
+
+/* ========================================
+   FEATURE CARD
+   ======================================== */
+.feature-card .emoji-icon {
+  font-size: 56px;
+  margin-bottom: var(--spacing-md);
+}
+
+.feature-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: var(--spacing-sm);
+}
+
+.feature-card p {
+  color: var(--text-medium);
+}
+
+/* ========================================
+   PROGRESS BAR
+   ======================================== */
+.progress-container {
+  background: #ecf0f1;
+  height: 24px;
+  border-radius: var(--radius-round);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg,
+    var(--color-coral) 0%,
+    var(--color-orange) 25%,
+    var(--color-yellow) 50%,
+    var(--color-turquoise) 75%,
+    var(--color-mint) 100%
+  );
+  border-radius: var(--radius-round);
+  transition: width 2s ease-out;
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+}
+
+.progress-label {
+  text-align: center;
+  margin-top: var(--spacing-sm);
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* ========================================
+   DONUT CHART
+   ======================================== */
+.donut-chart {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 0 auto;
+  box-shadow: 0 12px 40px rgba(255, 107, 107, 0.3);
+}
+
+.donut-chart::before {
+  content: '';
+  width: 160px;
+  height: 160px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.donut-value {
+  position: relative;
+  z-index: 1;
+  font-size: 52px;
+  font-weight: 900;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========================================
+   FORMS
+   ======================================== */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  font-family: inherit;
+  background: white;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-coral);
+  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+}
+
+/* ========================================
+   BADGES
+   ======================================== */
+.badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-primary {
+  background: var(--color-coral);
+  color: white;
+}
+
+.badge-success {
+  background: var(--color-mint);
+  color: var(--text-dark);
+}
+
+.badge-warning {
+  background: var(--color-yellow);
+  color: var(--text-dark);
+}
+
+.badge-info {
+  background: var(--color-turquoise);
+  color: white;
+}
+
+/* ========================================
+   ALERTS
+   ======================================== */
+.alert {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border-left: 4px solid;
+}
+
+.alert-info {
+  background: rgba(78, 205, 196, 0.1);
+  border-color: var(--color-turquoise);
+  color: var(--text-dark);
+}
+
+.alert-warning {
+  background: rgba(255, 230, 109, 0.2);
+  border-color: var(--color-yellow);
+  color: var(--text-dark);
+}
+
+.alert-danger {
+  background: rgba(255, 107, 107, 0.1);
+  border-color: var(--color-coral);
+  color: var(--text-dark);
+}
+
+.alert-success {
+  background: rgba(168, 230, 207, 0.2);
+  border-color: var(--color-mint);
+  color: var(--text-dark);
+}
+
+/* ========================================
+   MODAL/OVERLAY
+   ======================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-2xl);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: var(--text-medium);
+  transition: var(--transition-fast);
+}
+
+.modal-close:hover {
+  color: var(--text-dark);
+  transform: scale(1.1);
+}
+
+/* ========================================
+   LOADING SPINNER
+   ======================================== */
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ecf0f1;
+  border-top-color: var(--color-coral);
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+/* ========================================
+   SECTION TITLE
+   ======================================== */
+.section-title {
+  text-align: center;
+  font-size: 42px;
+  font-weight: 900;
+  margin-bottom: var(--spacing-xl);
+  background: var(--gradient-purple);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========================================
+   EMOJI ICONS
+   ======================================== */
+.emoji-icon {
+  font-size: 64px;
+  display: block;
+}

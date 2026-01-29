@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Berechne deine Lebenserwartung in 10 Minuten. Wissenschaftlich fundiert, kostenlos und vertraulich.">
+    <title>Dr. Livelong - Wie lange wirst du leben?</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Background Circles -->
+    <div class="background-circles">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+        <div class="circle circle-6"></div>
+    </div>
+
+    <!-- Bubbles -->
+    <div class="bubble bubble-1"></div>
+    <div class="bubble bubble-2"></div>
+    <div class="bubble bubble-3"></div>
+
+    <!-- Header with Language Selector -->
+    <header>
+        <div class="logo">🌈 Dr. Livelong</div>
+        
+        <div class="language-selector">
+            <button class="lang-btn active" data-lang="de">🇩🇪</button>
+            <button class="lang-btn" data-lang="en">🇬🇧</button>
+            <button class="lang-btn" data-lang="es">🇪🇸</button>
+        </div>
+        
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 data-i18n="hero_title">Wie lange wirst du leben? 🌟</h1>
+        <p data-i18n="hero_subtitle">Berechne deine Lebenserwartung in nur 10 Minuten. Wissenschaftlich fundiert, kostenlos und vertraulich.</p>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stat-card card-coral card-tilt-left">
+            <span class="emoji-icon">🎯</span>
+            <h3>10 Min</h3>
+            <p data-i18n="stat_time">Schnelle Berechnung</p>
+        </div>
+        <div class="stat-card card-turquoise card-tilt-right">
+            <span class="emoji-icon">📊</span>
+            <h3>19</h3>
+            <p data-i18n="stat_factors">Gesundheitsfaktoren</p>
+        </div>
+        <div class="stat-card card-mint card-tilt-left">
+            <span class="emoji-icon">✨</span>
+            <h3>100%</h3>
+            <p data-i18n="stat_free">Gratis Basis-Version</p>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="how_title">So funktioniert's 🔮</h2>
+            
+            <div class="grid grid-4">
+                <div class="card card-coral fade-in">
+                    <div class="emoji-icon">📝</div>
+                    <h3 data-i18n="step1_title">1. Meta-Fragen</h3>
+                    <p data-i18n="step1_desc">17 grundlegende Fragen zu Alter, Größe, Gewicht und Lebensstil</p>
+                </div>
+                
+                <div class="card card-turquoise fade-in" style="animation-delay: 0.1s;">
+                    <div class="emoji-icon">🧪</div>
+                    <h3 data-i18n="step2_title">2. Haupttest</h3>
+                    <p data-i18n="step2_desc">64 detaillierte Fragen zu deiner Gesundheit und Lebensgewohnheiten</p>
+                </div>
+                
+                <div class="card card-purple fade-in" style="animation-delay: 0.2s;">
+                    <div class="emoji-icon">📊</div>
+                    <h3 data-i18n="step3_title">3. Analyse</h3>
+                    <p data-i18n="step3_desc">Sofortige Berechnung deiner Lebenserwartung basierend auf 19 Faktoren</p>
+                </div>
+                
+                <div class="card card-mint fade-in" style="animation-delay: 0.3s;">
+                    <div class="emoji-icon">💪</div>
+                    <h3 data-i18n="step4_title">4. Handeln</h3>
+                    <p data-i18n="step4_desc">Personalisierte Empfehlungen und What-If Szenarien</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2 class="section-title" data-i18n="features_title">Was du bekommst 💫</h2>
+        <div class="features-grid">
+            <div class="feature-card card card-purple card-tilt-left">
+                <span class="emoji-icon">🧠</span>
+                <h3 data-i18n="feature1_title">19 Gesundheits-Faktoren</h3>
+                <p data-i18n="feature1_desc">Umfassende Analyse von Körper, Geist und Lifestyle</p>
+            </div>
+            <div class="feature-card card card-coral card-tilt-right">
+                <span class="emoji-icon">💪</span>
+                <h3 data-i18n="feature2_title">Personalisierte Tipps</h3>
+                <p data-i18n="feature2_desc">Konkrete Empfehlungen mit Jahren-Gewinn</p>
+            </div>
+            <div class="feature-card card card-turquoise card-tilt-left">
+                <span class="emoji-icon">🔮</span>
+                <h3 data-i18n="feature3_title">What-If Simulator</h3>
+                <p data-i18n="feature3_desc">Teste verschiedene Lifestyle-Änderungen</p>
+            </div>
+            <div class="feature-card card card-yellow card-tilt-right">
+                <span class="emoji-icon">📚</span>
+                <h3 data-i18n="feature4_title">Wissenschaftlich</h3>
+                <p data-i18n="feature4_desc">Basiert auf Framingham, QRISK3 & PREDIMED</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section">
+        <div class="container-narrow">
+            <h2 class="section-title" data-i18n="pricing_title">Preise 💰</h2>
+            
+            <div class="grid grid-2">
+                <!-- Free Version -->
+                <div class="card card-turquoise">
+                    <div style="text-align: center;">
+                        <div class="emoji-icon">✨</div>
+                        <h3 data-i18n="free_title">Kostenlos</h3>
+                        <div style="font-size: 48px; font-weight: 900; color: var(--color-turquoise); margin: 20px 0;">
+                            €0
+                        </div>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 20px 0;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">✅ <span data-i18n="free_feature1">Lebenserwartung berechnen</span></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">✅ <span data-i18n="free_feature2">Basis-Ergebnis anzeigen</span></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">✅ <span data-i18n="free_feature3">Top 3 Risiken & Stärken</span></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">❌ <span data-i18n="free_feature4">Detailliertes Profil</span></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">❌ <span data-i18n="free_feature5">Empfehlungen</span></li>
+                        <li style="padding: 10px 0;">❌ <span data-i18n="free_feature6">What-If Simulator</span></li>
+                    </ul>
+                    <a href="meta.html" class="btn btn-secondary btn-block" data-i18n="cta_start">Jetzt starten</a>
+                </div>
+                
+                <!-- Paid Version -->
+                <div class="card card-coral" style="position: relative; overflow: visible;">
+                    <div style="position: absolute; top: -15px; right: 20px; background: var(--color-yellow); color: var(--text-dark); padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 12px;">
+                        EMPFOHLEN
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="emoji-icon">🌟</div>
+                        <h3 data-i18n="paid_title">Premium</h3>
+                        <div style="font-size: 48px; font-weight: 900; color: var(--color-coral); margin: 20px 0;">
+                            €9.99
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-medium); margin-bottom: 20px;" data-i18n="paid_once">
+                            Einmalig, kein Abo
+                        </div>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 20px 0;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">✅ <span data-i18n="paid_feature1">Alles aus Kostenlos</span></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">✅ <span data-i18n="paid_feature2">Alle 19 Faktoren detailliert</span></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">✅ <span data-i18n="paid_feature3">Personalisierte Empfehlungen</span></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">✅ <span data-i18n="paid_feature4">What-If Simulator</span></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;">✅ <span data-i18n="paid_feature5">Interaktions-Analyse</span></li>
+                        <li style="padding: 10px 0;">✅ <span data-i18n="paid_feature6">PDF-Report</span></li>
+                    </ul>
+                    <a href="meta.html" class="btn btn-primary btn-block pulse" data-i18n="cta_start">Jetzt starten</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" style="background: rgba(255, 255, 255, 0.5);">
+        <div class="container-narrow">
+            <h2 class="section-title" data-i18n="faq_title">Häufige Fragen 💬</h2>
+            
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 data-i18n="faq1_q">Wie genau ist die Berechnung?</h3>
+                <p data-i18n="faq1_a">Die Berechnung basiert auf wissenschaftlichen Studien (Framingham, QRISK3, PREDIMED) und berücksichtigt 19 verschiedene Gesundheitsfaktoren. Sie gibt eine Schätzung basierend auf statistischen Durchschnittswerten.</p>
+            </div>
+            
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 data-i18n="faq2_q">Sind meine Daten sicher?</h3>
+                <p data-i18n="faq2_a">Ja! Alle Daten werden nur lokal in deinem Browser gespeichert. Wir speichern keine persönlichen Gesundheitsdaten auf unseren Servern.</p>
+            </div>
+            
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 data-i18n="faq3_q">Wie lange dauert der Test?</h3>
+                <p data-i18n="faq3_a">Der komplette Test dauert etwa 10 Minuten. Du kannst jederzeit pausieren und später weitermachen.</p>
+            </div>
+            
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 data-i18n="faq4_q">Was ist der Unterschied zwischen kostenlos und Premium?</h3>
+                <p data-i18n="faq4_a">Die kostenlose Version zeigt deine Lebenserwartung und die Top 3 Faktoren. Premium bietet detaillierte Analysen aller 19 Faktoren, personalisierte Empfehlungen und den What-If Simulator.</p>
+            </div>
+            
+            <div class="card">
+                <h3 data-i18n="faq5_q">Kann ich meine Lebenserwartung verbessern?</h3>
+                <p data-i18n="faq5_a">Ja! Das ist genau der Zweck von Dr. Livelong. Wir zeigen dir, welche Faktoren du beeinflussen kannst und wie viele Jahre du gewinnen könntest.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="section">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 42px; margin-bottom: 20px;" data-i18n="cta_final_title">Bereit zu starten? 🚀</h2>
+            <p style="font-size: 20px; margin-bottom: 40px; color: var(--text-medium);" data-i18n="cta_final_subtitle">
+                Finde heraus, wie lange du leben wirst – in nur 10 Minuten.
+            </p>
+            <a href="meta.html" class="btn btn-primary btn-large pulse" data-i18n="cta_start">🌟 Jetzt kostenlos starten</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: rgba(255, 255, 255, 0.8); padding: 40px; text-align: center; margin-top: 60px; border-radius: 50px 50px 0 0;">
+        <div class="logo" style="margin-bottom: 20px;">🌈 Dr. Livelong</div>
+        <p style="color: var(--text-medium); margin-bottom: 20px;" data-i18n="footer_tagline">
+            Wissenschaftlich fundierte Lebenserwartungs-Berechnung
+        </p>
+        <div style="margin-bottom: 20px;">
+            <a href="methodology.html" style="margin: 0 15px;" data-i18n="footer_methodology">Methodologie</a>
+            <a href="#" style="margin: 0 15px;" data-i18n="footer_privacy">Datenschutz</a>
+            <a href="#" style="margin: 0 15px;" data-i18n="footer_imprint">Impressum</a>
+        </div>
+        <p style="font-size: 14px; color: var(--text-light);">
+            © 2026 Dr. Livelong. All rights reserved.
+        </p>
+    </footer>
+
+    <!-- Language Script -->
+    <script type="module">
+        // Language Texts
+        const TEXTS = {
+            de: {
+                cta_start: 'Jetzt starten',
+                hero_title: 'Wie lange wirst du leben? 🌟',
+                hero_subtitle: 'Berechne deine Lebenserwartung in nur 10 Minuten. Wissenschaftlich fundiert, kostenlos und vertraulich.',
+                stat_time: 'Schnelle Berechnung',
+                stat_factors: 'Gesundheitsfaktoren',
+                stat_free: 'Gratis Basis-Version',
+                how_title: 'So funktioniert\'s 🔮',
+                step1_title: '1. Meta-Fragen',
+                step1_desc: '17 grundlegende Fragen zu Alter, Größe, Gewicht und Lebensstil',
+                step2_title: '2. Haupttest',
+                step2_desc: '64 detaillierte Fragen zu deiner Gesundheit und Lebensgewohnheiten',
+                step3_title: '3. Analyse',
+                step3_desc: 'Sofortige Berechnung deiner Lebenserwartung basierend auf 19 Faktoren',
+                step4_title: '4. Handeln',
+                step4_desc: 'Personalisierte Empfehlungen und What-If Szenarien',
+                features_title: 'Was du bekommst 💫',
+                feature1_title: '19 Gesundheits-Faktoren',
+                feature1_desc: 'Umfassende Analyse von Körper, Geist und Lifestyle',
+                feature2_title: 'Personalisierte Tipps',
+                feature2_desc: 'Konkrete Empfehlungen mit Jahren-Gewinn',
+                feature3_title: 'What-If Simulator',
+                feature3_desc: 'Teste verschiedene Lifestyle-Änderungen',
+                feature4_title: 'Wissenschaftlich',
+                feature4_desc: 'Basiert auf Framingham, QRISK3 & PREDIMED',
+                pricing_title: 'Preise 💰',
+                free_title: 'Kostenlos',
+                free_feature1: 'Lebenserwartung berechnen',
+                free_feature2: 'Basis-Ergebnis anzeigen',
+                free_feature3: 'Top 3 Risiken & Stärken',
+                free_feature4: 'Detailliertes Profil',
+                free_feature5: 'Empfehlungen',
+                free_feature6: 'What-If Simulator',
+                paid_title: 'Premium',
+                paid_once: 'Einmalig, kein Abo',
+                paid_feature1: 'Alles aus Kostenlos',
+                paid_feature2: 'Alle 19 Faktoren detailliert',
+                paid_feature3: 'Personalisierte Empfehlungen',
+                paid_feature4: 'What-If Simulator',
+                paid_feature5: 'Interaktions-Analyse',
+                paid_feature6: 'PDF-Report',
+                faq_title: 'Häufige Fragen 💬',
+                faq1_q: 'Wie genau ist die Berechnung?',
+                faq1_a: 'Die Berechnung basiert auf wissenschaftlichen Studien (Framingham, QRISK3, PREDIMED) und berücksichtigt 19 verschiedene Gesundheitsfaktoren. Sie gibt eine Schätzung basierend auf statistischen Durchschnittswerten.',
+                faq2_q: 'Sind meine Daten sicher?',
+                faq2_a: 'Ja! Alle Daten werden nur lokal in deinem Browser gespeichert. Wir speichern keine persönlichen Gesundheitsdaten auf unseren Servern.',
+                faq3_q: 'Wie lange dauert der Test?',
+                faq3_a: 'Der komplette Test dauert etwa 10 Minuten. Du kannst jederzeit pausieren und später weitermachen.',
+                faq4_q: 'Was ist der Unterschied zwischen kostenlos und Premium?',
+                faq4_a: 'Die kostenlose Version zeigt deine Lebenserwartung und die Top 3 Faktoren. Premium bietet detaillierte Analysen aller 19 Faktoren, personalisierte Empfehlungen und den What-If Simulator.',
+                faq5_q: 'Kann ich meine Lebenserwartung verbessern?',
+                faq5_a: 'Ja! Das ist genau der Zweck von Dr. Livelong. Wir zeigen dir, welche Faktoren du beeinflussen kannst und wie viele Jahre du gewinnen könntest.',
+                cta_final_title: 'Bereit zu starten? 🚀',
+                cta_final_subtitle: 'Finde heraus, wie lange du leben wirst – in nur 10 Minuten.',
+                footer_tagline: 'Wissenschaftlich fundierte Lebenserwartungs-Berechnung',
+                footer_methodology: 'Methodologie',
+                footer_privacy: 'Datenschutz',
+                footer_imprint: 'Impressum'
+            },
+            en: {
+                cta_start: 'Start now',
+                hero_title: 'How long will you live? 🌟',
+                hero_subtitle: 'Calculate your life expectancy in just 10 minutes. Scientifically based, free and confidential.',
+                stat_time: 'Quick calculation',
+                stat_factors: 'Health factors',
+                stat_free: 'Free basic version',
+                how_title: 'How it works 🔮',
+                step1_title: '1. Meta questions',
+                step1_desc: '17 basic questions about age, height, weight and lifestyle',
+                step2_title: '2. Main test',
+                step2_desc: '64 detailed questions about your health and habits',
+                step3_title: '3. Analysis',
+                step3_desc: 'Instant calculation of your life expectancy based on 19 factors',
+                step4_title: '4. Take action',
+                step4_desc: 'Personalized recommendations and what-if scenarios',
+                features_title: 'What you get 💫',
+                feature1_title: '19 Health Factors',
+                feature1_desc: 'Comprehensive analysis of body, mind and lifestyle',
+                feature2_title: 'Personalized Tips',
+                feature2_desc: 'Concrete recommendations with years gained',
+                feature3_title: 'What-If Simulator',
+                feature3_desc: 'Test different lifestyle changes',
+                feature4_title: 'Scientific',
+                feature4_desc: 'Based on Framingham, QRISK3 & PREDIMED',
+                pricing_title: 'Pricing 💰',
+                free_title: 'Free',
+                free_feature1: 'Calculate life expectancy',
+                free_feature2: 'Show basic result',
+                free_feature3: 'Top 3 risks & strengths',
+                free_feature4: 'Detailed profile',
+                free_feature5: 'Recommendations',
+                free_feature6: 'What-If Simulator',
+                paid_title: 'Premium',
+                paid_once: 'One-time, no subscription',
+                paid_feature1: 'Everything from Free',
+                paid_feature2: 'All 19 factors detailed',
+                paid_feature3: 'Personalized recommendations',
+                paid_feature4: 'What-If Simulator',
+                paid_feature5: 'Interaction analysis',
+                paid_feature6: 'PDF Report',
+                faq_title: 'Frequently Asked Questions 💬',
+                faq1_q: 'How accurate is the calculation?',
+                faq1_a: 'The calculation is based on scientific studies (Framingham, QRISK3, PREDIMED) and considers 19 different health factors. It provides an estimate based on statistical averages.',
+                faq2_q: 'Is my data safe?',
+                faq2_a: 'Yes! All data is stored locally in your browser only. We do not store any personal health data on our servers.',
+                faq3_q: 'How long does the test take?',
+                faq3_a: 'The complete test takes about 10 minutes. You can pause at any time and continue later.',
+                faq4_q: 'What\'s the difference between free and premium?',
+                faq4_a: 'The free version shows your life expectancy and top 3 factors. Premium offers detailed analysis of all 19 factors, personalized recommendations and the what-if simulator.',
+                faq5_q: 'Can I improve my life expectancy?',
+                faq5_a: 'Yes! That\'s exactly the purpose of Dr. Livelong. We show you which factors you can influence and how many years you could gain.',
+                cta_final_title: 'Ready to start? 🚀',
+                cta_final_subtitle: 'Find out how long you will live – in just 10 minutes.',
+                footer_tagline: 'Scientifically based life expectancy calculation',
+                footer_methodology: 'Methodology',
+                footer_privacy: 'Privacy',
+                footer_imprint: 'Imprint'
+            },
+            es: {
+                cta_start: 'Empezar ahora',
+                hero_title: '¿Cuánto tiempo vivirás? 🌟',
+                hero_subtitle: 'Calcula tu esperanza de vida en solo 10 minutos. Con base científica, gratis y confidencial.',
+                stat_time: 'Cálculo rápido',
+                stat_factors: 'Factores de salud',
+                stat_free: 'Versión básica gratis',
+                how_title: 'Cómo funciona 🔮',
+                step1_title: '1. Preguntas meta',
+                step1_desc: '17 preguntas básicas sobre edad, altura, peso y estilo de vida',
+                step2_title: '2. Test principal',
+                step2_desc: '64 preguntas detalladas sobre tu salud y hábitos',
+                step3_title: '3. Análisis',
+                step3_desc: 'Cálculo instantáneo de tu esperanza de vida basado en 19 factores',
+                step4_title: '4. Actuar',
+                step4_desc: 'Recomendaciones personalizadas y escenarios what-if',
+                features_title: 'Lo que obtienes 💫',
+                feature1_title: '19 Factores de Salud',
+                feature1_desc: 'Análisis integral de cuerpo, mente y estilo de vida',
+                feature2_title: 'Consejos Personalizados',
+                feature2_desc: 'Recomendaciones concretas con años ganados',
+                feature3_title: 'Simulador What-If',
+                feature3_desc: 'Prueba diferentes cambios de estilo de vida',
+                feature4_title: 'Científico',
+                feature4_desc: 'Basado en Framingham, QRISK3 y PREDIMED',
+                pricing_title: 'Precios 💰',
+                free_title: 'Gratis',
+                free_feature1: 'Calcular esperanza de vida',
+                free_feature2: 'Mostrar resultado básico',
+                free_feature3: 'Top 3 riesgos y fortalezas',
+                free_feature4: 'Perfil detallado',
+                free_feature5: 'Recomendaciones',
+                free_feature6: 'Simulador What-If',
+                paid_title: 'Premium',
+                paid_once: 'Pago único, sin suscripción',
+                paid_feature1: 'Todo de Gratis',
+                paid_feature2: 'Todos los 19 factores detallados',
+                paid_feature3: 'Recomendaciones personalizadas',
+                paid_feature4: 'Simulador What-If',
+                paid_feature5: 'Análisis de interacciones',
+                paid_feature6: 'Informe PDF',
+                faq_title: 'Preguntas Frecuentes 💬',
+                faq1_q: '¿Qué tan preciso es el cálculo?',
+                faq1_a: 'El cálculo se basa en estudios científicos (Framingham, QRISK3, PREDIMED) y considera 19 factores de salud diferentes. Proporciona una estimación basada en promedios estadísticos.',
+                faq2_q: '¿Están seguros mis datos?',
+                faq2_a: '¡Sí! Todos los datos se almacenan solo localmente en tu navegador. No almacenamos ningún dato de salud personal en nuestros servidores.',
+                faq3_q: '¿Cuánto dura el test?',
+                faq3_a: 'El test completo dura aproximadamente 10 minutos. Puedes pausar en cualquier momento y continuar más tarde.',
+                faq4_q: '¿Cuál es la diferencia entre gratis y premium?',
+                faq4_a: 'La versión gratuita muestra tu esperanza de vida y los 3 factores principales. Premium ofrece análisis detallado de los 19 factores, recomendaciones personalizadas y el simulador what-if.',
+                faq5_q: '¿Puedo mejorar mi esperanza de vida?',
+                faq5_a: '¡Sí! Ese es exactamente el propósito de Dr. Livelong. Te mostramos qué factores puedes influenciar y cuántos años podrías ganar.',
+                cta_final_title: '¿Listo para empezar? 🚀',
+                cta_final_subtitle: 'Descubre cuánto tiempo vivirás – en solo 10 minutos.',
+                footer_tagline: 'Cálculo de esperanza de vida con base científica',
+                footer_methodology: 'Metodología',
+                footer_privacy: 'Privacidad',
+                footer_imprint: 'Aviso legal'
+            }
+        };
+
+        // Get current language from localStorage or default to 'de'
+        let currentLang = localStorage.getItem('dr_livelong_lang') || 'de';
+
+        // Update page language
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('dr_livelong_lang', lang);
+            document.documentElement.lang = lang;
+
+            // Update all elements with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (TEXTS[lang] && TEXTS[lang][key]) {
+                    el.textContent = TEXTS[lang][key];
+                }
+            });
+
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Language selector event listeners
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                updateLanguage(lang);
+            });
+        });
+
+        // Initialize with saved language
+        updateLanguage(currentLang);
+    </script>
+
+    <style>
+        /* Language Selector Styles */
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px;
+            border-radius: 20px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            filter: grayscale(1) opacity(0.5);
+        }
+
+        .lang-btn:hover {
+            filter: grayscale(0) opacity(0.8);
+            transform: scale(1.1);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            filter: grayscale(0) opacity(1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .language-selector {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .lang-btn {
+                font-size: 20px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</body>
+</html>

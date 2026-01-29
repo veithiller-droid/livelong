@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dr. Livelong - Meta-Fragen: Grundlegende Informationen für deine Lebenserwartungs-Berechnung" />
+  <title>Dr. Livelong - Meta-Fragen</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+
+<body>
+  <!-- Background Circles -->
+  <div class="background-circles">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+    <div class="circle circle-4"></div>
+    <div class="circle circle-5"></div>
+    <div class="circle circle-6"></div>
+  </div>
+
+  <!-- Header with Language Selector -->
+  <header>
+    <div class="logo">🌈 Dr. Livelong</div>
+
+    <div class="language-selector">
+      <button class="lang-btn" data-lang="de">🇩🇪</button>
+      <button class="lang-btn" data-lang="en">🇬🇧</button>
+      <button class="lang-btn" data-lang="es">🇪🇸</button>
+    </div>
+
+    <a href="index.html" class="btn btn-secondary" data-i18n="btn_back">Zurück</a>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container-narrow section">
+    <!-- Progress Info -->
+    <div class="card" style="margin-bottom: 30px; text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 10px;">📋</div>
+      <h1 data-i18n="title">Grundlegende Informationen</h1>
+      <p data-i18n="subtitle" style="color: var(--text-medium); font-size: 16px;">
+        Bevor wir starten, brauchen wir ein paar grundlegende Informationen über dich.
+        Das dauert nur 2-3 Minuten.
+      </p>
+      <div class="alert alert-info" style="margin-top: 20px;">
+        <strong data-i18n="privacy_title">🔒 Deine Privatsphäre:</strong>
+        <span data-i18n="privacy_text">
+          Alle Daten werden nur lokal in deinem Browser gespeichert.
+          Wir übertragen keine persönlichen Gesundheitsdaten an Server.
+        </span>
+      </div>
+    </div>
+
+    <!-- Meta Questions Form -->
+    <form id="meta-form">
+      <div id="meta-questions-container"></div>
+
+      <div style="margin-top: 40px; text-align: center;">
+        <button type="submit" class="btn btn-primary btn-large pulse" data-i18n="btn_continue">
+          Weiter zum Haupttest →
+        </button>
+      </div>
+    </form>
+
+    <div style="margin-top: 40px; text-align: center; color: var(--text-light); font-size: 14px;">
+      <span data-i18n="progress_step">Schritt 1 von 3</span> •
+      <span data-i18n="progress_time">~2-3 Minuten</span>
+    </div>
+  </div>
+
+  <!-- Language Selector + Question Styles -->
+  <style>
+    .language-selector {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px;
+      border-radius: 20px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      filter: grayscale(1) opacity(0.5);
+    }
+
+    .lang-btn:hover {
+      filter: grayscale(0) opacity(0.8);
+      transform: scale(1.1);
+    }
+
+    .lang-btn.active {
+      background: var(--gradient-primary);
+      filter: grayscale(0) opacity(1);
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    }
+
+    .question-block {
+      background: white;
+      padding: 30px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 20px;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .question-block:hover {
+      border-color: var(--color-coral);
+      box-shadow: 0 8px 24px rgba(255, 107, 107, 0.15);
+    }
+
+    .question-label {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .question-help {
+      display: block;
+      font-size: 14px;
+      color: var(--text-medium);
+      margin-bottom: 16px;
+    }
+
+    .input-with-unit {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .unit-label {
+      font-size: 16px;
+      color: var(--text-medium);
+      font-weight: 600;
+    }
+
+    .radio-group,
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radio-option,
+    .checkbox-option {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: #f8f9fa;
+      border: 2px solid #ddd;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .radio-option:hover,
+    .checkbox-option:hover {
+      background: var(--color-coral)15;
+      border-color: var(--color-coral);
+    }
+
+    .radio-option.selected,
+    .checkbox-option.selected {
+      background: var(--color-coral)15;
+      border-color: var(--color-coral);
+      font-weight: 600;
+    }
+
+    .radio-option input[type="radio"],
+    .checkbox-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      cursor: pointer;
+    }
+
+    .error-message {
+      color: var(--color-coral);
+      font-size: 14px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .question-block.error {
+      border-color: var(--color-coral);
+    }
+
+    .question-block.error .error-message {
+      display: block;
+    }
+
+    .question-block.hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .language-selector {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .question-block {
+        padding: 20px;
+      }
+    }
+  </style>
+
+  <!-- JavaScript -->
+  <script type="module">
+    import { META_QUESTIONS } from './js/data/meta_questions.js';
+    import { STATE, setMetaAnswer, saveState, setProgress } from './js/core/state.js';
+
+    // =========================
+    // KEY-MAP FIX (Meta-IDs -> STATE.meta Keys)
+    // =========================
+    const META_KEY_MAP = {
+      meta_birthyear: "meta_birth_year",
+      meta_gender: "meta_sex",
+      meta_country: "meta_country",
+      meta_height: "meta_height",
+      meta_weight: "meta_weight",
+      meta_blood_pressure_systolic: "meta_bp_systolic",
+      meta_bp_medication: "meta_bp_medication",
+      meta_cholesterol_total: "meta_cholesterol_total",
+      meta_hdl_cholesterol: "meta_cholesterol_hdl",
+      meta_diabetes: "meta_diabetes",
+      meta_cvd_history: "meta_cvd_history",
+      meta_lung_disease: "meta_lung_disease",
+      meta_cancer: "meta_cancer",
+      meta_kidney_disease: "meta_kidney_disease",
+      meta_smoking_status: "meta_smoking",
+      meta_mobility: "meta_mobility",
+      meta_adl: "meta_adl",
+    };
+
+    function metaKey(id) {
+      return META_KEY_MAP[id] || id;
+    }
+
+    // =========================
+    // i18n Texts
+    // =========================
+    const TEXTS = {
+      de: {
+        title: 'Grundlegende Informationen',
+        subtitle: 'Bevor wir starten, brauchen wir ein paar grundlegende Informationen über dich. Das dauert nur 2-3 Minuten.',
+        privacy_title: '🔒 Deine Privatsphäre:',
+        privacy_text: 'Alle Daten werden nur lokal in deinem Browser gespeichert. Wir übertragen keine persönlichen Gesundheitsdaten an Server.',
+        btn_continue: 'Weiter zum Haupttest →',
+        btn_back: 'Zurück',
+        progress_step: 'Schritt 1 von 3',
+        progress_time: '~2-3 Minuten',
+        error_required: 'Dieses Feld ist erforderlich',
+        error_number: 'Bitte gib eine gültige Zahl ein',
+        error_range: 'Wert außerhalb des erlaubten Bereichs'
+      },
+      en: {
+        title: 'Basic Information',
+        subtitle: 'Before we start, we need some basic information about you. This will only take 2-3 minutes.',
+        privacy_title: '🔒 Your Privacy:',
+        privacy_text: 'All data is stored locally in your browser only. We do not transmit any personal health data to servers.',
+        btn_continue: 'Continue to main test →',
+        btn_back: 'Back',
+        progress_step: 'Step 1 of 3',
+        progress_time: '~2-3 minutes',
+        error_required: 'This field is required',
+        error_number: 'Please enter a valid number',
+        error_range: 'Value outside allowed range'
+      },
+      es: {
+        title: 'Información Básica',
+        subtitle: 'Antes de comenzar, necesitamos información básica sobre ti. Esto solo tomará 2-3 minutos.',
+        privacy_title: '🔒 Tu Privacidad:',
+        privacy_text: 'Todos los datos se almacenan solo localmente en tu navegador. No transmitimos ningún dato de salud personal a servidores.',
+        btn_continue: 'Continuar al test principal →',
+        btn_back: 'Volver',
+        progress_step: 'Paso 1 de 3',
+        progress_time: '~2-3 minutos',
+        error_required: 'Este campo es obligatorio',
+        error_number: 'Por favor ingresa un número válido',
+        error_range: 'Valor fuera del rango permitido'
+      }
+    };
+
+    let currentLang = (localStorage.getItem('dr_livelong_lang') || 'de').toLowerCase().split('-')[0];
+
+    function updateLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('dr_livelong_lang', lang);
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (TEXTS[lang] && TEXTS[lang][key]) el.textContent = TEXTS[lang][key];
+      });
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+
+      renderQuestions();
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => updateLanguage(btn.getAttribute('data-lang')));
+    });
+
+    // =========================
+    // Helpers
+    // =========================
+    function isEmptyValue(v) {
+      return v === null || v === undefined || v === '' || (Array.isArray(v) && v.length === 0);
+    }
+
+    function shouldShowQuestion(question) {
+      if (!question.conditional) return true;
+      const condKey = metaKey(question.conditional);
+      const condValue = STATE.meta[condKey];
+      return !isEmptyValue(condValue);
+    }
+
+    function clearError(questionId) {
+      const block = document.getElementById(`question-${questionId}`);
+      if (block) block.classList.remove('error');
+    }
+
+    function showError(questionId) {
+      const block = document.getElementById(`question-${questionId}`);
+      if (block) {
+        block.classList.add('error');
+        block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function getQuestionText(question) {
+      return (question.text && (question.text[currentLang] || question.text.de || question.text.en || question.text.es)) || '';
+    }
+
+    function getQuestionHelp(question) {
+      // meta_questions.js uses "explanation", not "help_text"
+      const ex = question.explanation;
+      return (ex && (ex[currentLang] || ex.de || ex.en || ex.es)) || '';
+    }
+
+    // =========================
+    // Render Questions
+    // =========================
+    function renderQuestions() {
+      const container = document.getElementById('meta-questions-container');
+      container.innerHTML = '';
+
+      META_QUESTIONS.forEach(question => {
+        const block = createQuestionBlock(question);
+        container.appendChild(block);
+      });
+
+      // second pass: apply conditional visibility based on current state
+      META_QUESTIONS.forEach(q => applyConditionalVisibility(q));
+    }
+
+    function applyConditionalVisibility(question) {
+      if (!question.conditional) return;
+
+      const block = document.getElementById(`question-${question.id}`);
+      if (!block) return;
+
+      const visible = shouldShowQuestion(question);
+      block.classList.toggle('hidden', !visible);
+
+      // If hidden: clear stored value so validation doesn't choke later
+      if (!visible) {
+        const key = metaKey(question.id);
+        if (!isEmptyValue(STATE.meta[key])) {
+          setMetaAnswer(key, Array.isArray(STATE.meta[key]) ? [] : null);
+          saveState();
+        }
+      }
+    }
+
+    function createQuestionBlock(question) {
+      const block = document.createElement('div');
+      block.className = 'question-block fade-in';
+      block.id = `question-${question.id}`;
+
+      const label = document.createElement('label');
+      label.className = 'question-label';
+      label.textContent = getQuestionText(question);
+      block.appendChild(label);
+
+      const helpText = getQuestionHelp(question);
+      if (helpText) {
+        const help = document.createElement('span');
+        help.className = 'question-help';
+        help.textContent = helpText;
+        block.appendChild(help);
+      }
+
+      const inputContainer = document.createElement('div');
+
+      switch (question.type) {
+        case 'number':
+          inputContainer.appendChild(createNumberInput(question));
+          break;
+        case 'select':
+          inputContainer.appendChild(createSelectInput(question));
+          break;
+        case 'multiselect':
+          inputContainer.appendChild(createMultiselectInput(question));
+          break;
+      }
+
+      block.appendChild(inputContainer);
+
+      const errorMsg = document.createElement('div');
+      errorMsg.className = 'error-message';
+      errorMsg.textContent = TEXTS[currentLang].error_required;
+      block.appendChild(errorMsg);
+
+      // Conditional initial state
+      if (!shouldShowQuestion(question)) block.classList.add('hidden');
+
+      return block;
+    }
+
+    function createNumberInput(question) {
+      const key = metaKey(question.id);
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'input-with-unit';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.id = question.id;
+      input.name = question.id;
+      input.required = question.required !== false;
+
+      // FIX: meta_questions.js uses validation.min/max
+      if (question.validation && question.validation.min !== undefined) input.min = question.validation.min;
+      if (question.validation && question.validation.max !== undefined) input.max = question.validation.max;
+
+      if (question.placeholder) input.placeholder = question.placeholder;
+
+      const savedValue = STATE.meta[key];
+      if (savedValue !== null && savedValue !== undefined) input.value = savedValue;
+
+      input.addEventListener('input', () => {
+        const raw = input.value.trim();
+
+        if (raw === '') {
+          setMetaAnswer(key, null);
+          saveState();
+          clearError(question.id);
+          // conditional dependents might change visibility
+          META_QUESTIONS.forEach(applyConditionalVisibility);
+          return;
+        }
+
+        const value = parseFloat(raw);
+        if (Number.isNaN(value)) return;
+
+        // range validation (if defined)
+        if (question.validation) {
+          const { min, max } = question.validation;
+          if ((min !== undefined && value < min) || (max !== undefined && value > max)) {
+            const block = document.getElementById(`question-${question.id}`);
+            if (block) {
+              block.classList.add('error');
+              const msg = block.querySelector('.error-message');
+              if (msg) msg.textContent = TEXTS[currentLang].error_range;
+            }
+            setMetaAnswer(key, null);
+            saveState();
+            META_QUESTIONS.forEach(applyConditionalVisibility);
+            return;
+          }
+        }
+
+        setMetaAnswer(key, value);
+        saveState();
+        clearError(question.id);
+
+        // update conditional visibility
+        META_QUESTIONS.forEach(applyConditionalVisibility);
+      });
+
+      wrapper.appendChild(input);
+      return wrapper;
+    }
+
+    function createSelectInput(question) {
+      const key = metaKey(question.id);
+
+      const group = document.createElement('div');
+      group.className = 'radio-group';
+
+      const savedValue = STATE.meta[key];
+
+      question.options.forEach(option => {
+        const value = option.value;
+        const labels = option.label;
+
+        const optionEl = document.createElement('label');
+        optionEl.className = 'radio-option';
+        if (savedValue === value) optionEl.classList.add('selected');
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = question.id;
+        input.value = value;
+        input.required = question.required !== false;
+        if (savedValue === value) input.checked = true;
+
+        input.addEventListener('change', () => {
+          setMetaAnswer(key, value);
+          saveState();
+          clearError(question.id);
+
+          group.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+          optionEl.classList.add('selected');
+
+          // conditional dependents might change visibility
+          META_QUESTIONS.forEach(applyConditionalVisibility);
+        });
+
+        const labelText = document.createElement('span');
+        labelText.textContent = (labels && (labels[currentLang] || labels.de || labels.en || labels.es)) || '';
+
+        optionEl.appendChild(input);
+        optionEl.appendChild(labelText);
+        group.appendChild(optionEl);
+      });
+
+      return group;
+    }
+
+    function createMultiselectInput(question) {
+      const key = metaKey(question.id);
+
+      const group = document.createElement('div');
+      group.className = 'checkbox-group';
+
+      const savedValue = STATE.meta[key] || [];
+
+      question.options.forEach(option => {
+        const value = option.value;
+        const labels = option.label;
+        const isExclusive = option.exclusive === true;
+
+        const optionEl = document.createElement('label');
+        optionEl.className = 'checkbox-option';
+        if (savedValue.includes(value)) optionEl.classList.add('selected');
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.name = question.id;
+        input.value = value;
+        input.checked = savedValue.includes(value);
+
+        input.addEventListener('change', () => {
+          let currentValues = Array.isArray(STATE.meta[key]) ? [...STATE.meta[key]] : [];
+
+          if (input.checked) {
+            if (isExclusive) {
+              // exclusive selected => only this one
+              currentValues = [value];
+            } else {
+              // non-exclusive selected => remove any exclusive options like "none"
+              const exclusiveValues = question.options.filter(o => o.exclusive).map(o => o.value);
+              currentValues = currentValues.filter(v => !exclusiveValues.includes(v));
+              if (!currentValues.includes(value)) currentValues.push(value);
+            }
+          } else {
+            currentValues = currentValues.filter(v => v !== value);
+          }
+
+          setMetaAnswer(key, currentValues);
+          saveState();
+          clearError(question.id);
+
+          // refresh visual state inside this group
+          group.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            const parent = cb.closest('.checkbox-option');
+            if (!parent) return;
+            const v = cb.value;
+            cb.checked = (STATE.meta[key] || []).includes(v);
+            parent.classList.toggle('selected', cb.checked);
+          });
+
+          // conditional dependents might change visibility
+          META_QUESTIONS.forEach(applyConditionalVisibility);
+        });
+
+        const labelText = document.createElement('span');
+        labelText.textContent = (labels && (labels[currentLang] || labels.de || labels.en || labels.es)) || '';
+
+        optionEl.appendChild(input);
+        optionEl.appendChild(labelText);
+        group.appendChild(optionEl);
+      });
+
+      return group;
+    }
+
+    // =========================
+    // Submit
+    // =========================
+    document.getElementById('meta-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      let isValid = true;
+      let firstErrorId = null;
+
+      META_QUESTIONS.forEach(question => {
+        // skip hidden conditional questions
+        if (!shouldShowQuestion(question)) return;
+
+        const value = STATE.meta[metaKey(question.id)];
+
+        if (question.required !== false) {
+          const empty = isEmptyValue(value);
+          if (empty) {
+            const block = document.getElementById(`question-${question.id}`);
+            if (block) {
+              const msg = block.querySelector('.error-message');
+              if (msg) msg.textContent = TEXTS[currentLang].error_required;
+            }
+            showError(question.id);
+            isValid = false;
+            if (!firstErrorId) firstErrorId = question.id;
+          }
+        }
+      });
+
+      if (!isValid) {
+        if (firstErrorId) showError(firstErrorId);
+        return;
+      }
+
+      setProgress('meta_completed', true);
+      window.location.href = 'test.html';
+    });
+
+    // =========================
+    // Init
+    // =========================
+    updateLanguage(currentLang);
+  </script>
+</body>
+</html>

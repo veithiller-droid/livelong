@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dr. Livelong - Deine Lebenserwartung: Ergebnis deiner Gesundheitsanalyse">
+    <title>Dr. Livelong - Dein Ergebnis</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Background Circles -->
+    <div class="background-circles">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+        <div class="circle circle-6"></div>
+    </div>
+
+    <!-- Header with Language Selector -->
+    <header>
+        <div class="logo">🌈 Dr. Livelong</div>
+        
+        <div class="language-selector">
+            <button class="lang-btn" data-lang="de">🇩🇪</button>
+            <button class="lang-btn" data-lang="en">🇬🇧</button>
+            <button class="lang-btn" data-lang="es">🇪🇸</button>
+        </div>
+        
+        <a href="index.html" class="btn btn-secondary" data-i18n="btn_home">Startseite</a>
+    </header>
+
+    <!-- Result Container -->
+    <div id="result-container" class="container section">
+        <!-- result_render.js renders everything here -->
+    </div>
+
+    <!-- Paywall Modal Container -->
+    <div id="paywall-container"></div>
+
+    <!-- Language Selector Styles -->
+    <style>
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px;
+            border-radius: 20px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            filter: grayscale(1) opacity(0.5);
+        }
+
+        .lang-btn:hover {
+            filter: grayscale(0) opacity(0.8);
+            transform: scale(1.1);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            filter: grayscale(0) opacity(1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .language-selector {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script type="module">
+        import { renderResult } from './js/ui/result_render.js';
+        import { initPaywall } from './js/ui/paywall.js';
+        import { getCalculation } from './js/core/state.js';
+
+        // i18n Texts
+        const TEXTS = {
+            de: {
+                btn_home: 'Startseite',
+                no_result_title: 'Kein Ergebnis gefunden',
+                no_result_message: 'Bitte führe zuerst den Test durch.',
+                btn_start_test: 'Zum Test'
+            },
+            en: {
+                btn_home: 'Home',
+                no_result_title: 'No result found',
+                no_result_message: 'Please complete the test first.',
+                btn_start_test: 'Start Test'
+            },
+            es: {
+                btn_home: 'Inicio',
+                no_result_title: 'No se encontró resultado',
+                no_result_message: 'Por favor completa el test primero.',
+                btn_start_test: 'Iniciar Test'
+            }
+        };
+
+        // Get current language
+        let currentLang = localStorage.getItem('dr_livelong_lang') || 'de';
+
+        // Update language
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('dr_livelong_lang', lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (TEXTS[lang] && TEXTS[lang][key]) {
+                    el.textContent = TEXTS[lang][key];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Language selector
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateLanguage(btn.getAttribute('data-lang'));
+                // Reload page to re-render in new language
+                location.reload();
+            });
+        });
+
+        // Check for calculation result
+        const calculation = getCalculation();
+        
+        if (!calculation) {
+            // No result found - show error
+            const container = document.getElementById('result-container');
+            container.innerHTML = `
+                <div class="card" style="text-align: center; max-width: 600px; margin: 100px auto;">
+                    <div style="font-size: 64px; margin-bottom: 20px;">❌</div>
+                    <h2 data-i18n="no_result_title">${TEXTS[currentLang].no_result_title}</h2>
+                    <p data-i18n="no_result_message" style="color: var(--text-medium); margin: 20px 0;">
+                        ${TEXTS[currentLang].no_result_message}
+                    </p>
+                    <a href="meta.html" class="btn btn-primary btn-large" data-i18n="btn_start_test">
+                        ${TEXTS[currentLang].btn_start_test}
+                    </a>
+                </div>
+            `;
+        } else {
+            // Initialize
+            updateLanguage(currentLang);
+            initPaywall();
+            renderResult();
+        }
+
+        // Handle payment success callback
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('payment') === 'success') {
+            const sessionId = urlParams.get('session_id');
+            console.log('Payment successful!', sessionId);
+            // handleSuccessfulPayment() wird in paywall.js aufgerufen
+        }
+
+        if (urlParams.get('payment') === 'cancelled') {
+            console.log('Payment cancelled');
+            // Optional: Show message
+        }
+    </script>
+</body>
+</html>

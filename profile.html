@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dr. Livelong - Dein detailliertes Gesundheitsprofil mit personalisierten Empfehlungen">
+    <title>Dr. Livelong - Dein Profil</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Background Circles -->
+    <div class="background-circles">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+        <div class="circle circle-6"></div>
+    </div>
+
+    <!-- Header with Language Selector -->
+    <header>
+        <div class="logo">🌈 Dr. Livelong</div>
+        
+        <div class="language-selector">
+            <button class="lang-btn" data-lang="de">🇩🇪</button>
+            <button class="lang-btn" data-lang="en">🇬🇧</button>
+            <button class="lang-btn" data-lang="es">🇪🇸</button>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <a href="result.html" class="btn btn-secondary" data-i18n="btn_result">Ergebnis</a>
+            <a href="index.html" class="btn btn-secondary" data-i18n="btn_home">Startseite</a>
+        </div>
+    </header>
+
+    <!-- Profile Container -->
+    <div id="profile-container" class="container section">
+        <!-- profile_render.js renders everything here -->
+    </div>
+
+    <!-- Language Selector Styles -->
+    <style>
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px;
+            border-radius: 20px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            filter: grayscale(1) opacity(0.5);
+        }
+
+        .lang-btn:hover {
+            filter: grayscale(0) opacity(0.8);
+            transform: scale(1.1);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            filter: grayscale(0) opacity(1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .language-selector {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            header > div:last-child {
+                order: 4;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script type="module">
+        import { renderProfile } from './js/ui/profile_render.js';
+        import { checkAccess } from './js/ui/paywall.js';
+        import { getCalculation } from './js/core/state.js';
+
+        // i18n Texts
+        const TEXTS = {
+            de: {
+                btn_result: 'Ergebnis',
+                btn_home: 'Startseite',
+                no_access_title: 'Kein Zugriff',
+                no_access_message: 'Bitte schalte zuerst die Premium-Version frei, um dein detailliertes Profil zu sehen.',
+                btn_unlock: 'Premium freischalten',
+                no_result_title: 'Kein Ergebnis gefunden',
+                no_result_message: 'Bitte führe zuerst den Test durch.',
+                btn_start_test: 'Zum Test'
+            },
+            en: {
+                btn_result: 'Result',
+                btn_home: 'Home',
+                no_access_title: 'No Access',
+                no_access_message: 'Please unlock the Premium version first to see your detailed profile.',
+                btn_unlock: 'Unlock Premium',
+                no_result_title: 'No result found',
+                no_result_message: 'Please complete the test first.',
+                btn_start_test: 'Start Test'
+            },
+            es: {
+                btn_result: 'Resultado',
+                btn_home: 'Inicio',
+                no_access_title: 'Sin Acceso',
+                no_access_message: 'Por favor desbloquea la versión Premium primero para ver tu perfil detallado.',
+                btn_unlock: 'Desbloquear Premium',
+                no_result_title: 'No se encontró resultado',
+                no_result_message: 'Por favor completa el test primero.',
+                btn_start_test: 'Iniciar Test'
+            }
+        };
+
+        // Get current language
+        let currentLang = localStorage.getItem('dr_livelong_lang') || 'de';
+
+        // Update language
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('dr_livelong_lang', lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (TEXTS[lang] && TEXTS[lang][key]) {
+                    el.textContent = TEXTS[lang][key];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Language selector
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateLanguage(btn.getAttribute('data-lang'));
+                // Reload page to re-render in new language
+                location.reload();
+            });
+        });
+
+        // Check access and calculation
+        const hasAccess = checkAccess();
+        const calculation = getCalculation();
+        const container = document.getElementById('profile-container');
+
+        if (!calculation) {
+            // No result found
+            container.innerHTML = `
+                <div class="card" style="text-align: center; max-width: 600px; margin: 100px auto;">
+                    <div style="font-size: 64px; margin-bottom: 20px;">❌</div>
+                    <h2 data-i18n="no_result_title">${TEXTS[currentLang].no_result_title}</h2>
+                    <p data-i18n="no_result_message" style="color: var(--text-medium); margin: 20px 0;">
+                        ${TEXTS[currentLang].no_result_message}
+                    </p>
+                    <a href="meta.html" class="btn btn-primary btn-large" data-i18n="btn_start_test">
+                        ${TEXTS[currentLang].btn_start_test}
+                    </a>
+                </div>
+            `;
+        } else if (!hasAccess) {
+            // No access - show paywall
+            container.innerHTML = `
+                <div class="card" style="text-align: center; max-width: 600px; margin: 100px auto;">
+                    <div style="font-size: 64px; margin-bottom: 20px;">🔒</div>
+                    <h2 data-i18n="no_access_title">${TEXTS[currentLang].no_access_title}</h2>
+                    <p data-i18n="no_access_message" style="color: var(--text-medium); margin: 20px 0;">
+                        ${TEXTS[currentLang].no_access_message}
+                    </p>
+                    <a href="result.html" class="btn btn-primary btn-large" data-i18n="btn_unlock">
+                        ${TEXTS[currentLang].btn_unlock}
+                    </a>
+                </div>
+            `;
+        } else {
+            // Has access - render profile
+            updateLanguage(currentLang);
+            renderProfile();
+        }
+
+        // Check URL for access token (for future backend integration)
+        const urlParams = window.location.pathname.split('/');
+        if (urlParams[1] === 'profile' && urlParams[2]) {
+            const token = urlParams[2];
+            console.log('Profile token from URL:', token);
+            // Future: Load profile from backend using token
+            // For now: Just log it
+        }
+    </script>
+</body>
+</html>

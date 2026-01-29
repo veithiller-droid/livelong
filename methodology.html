@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dr. Livelong - Wissenschaftliche Grundlage: Wie wir deine Lebenserwartung berechnen">
+    <title>Dr. Livelong - Methodologie</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Background Circles -->
+    <div class="background-circles" style="opacity: 0.3;">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+        <div class="circle circle-6"></div>
+    </div>
+
+    <!-- Header with Language Selector -->
+    <header>
+        <div class="logo">🌈 Dr. Livelong</div>
+        
+        <div class="language-selector">
+            <button class="lang-btn" data-lang="de">🇩🇪</button>
+            <button class="lang-btn" data-lang="en">🇬🇧</button>
+            <button class="lang-btn" data-lang="es">🇪🇸</button>
+        </div>
+        
+        <a href="index.html" class="btn btn-secondary" data-i18n="btn_home">Startseite</a>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container-narrow section">
+        <!-- Header -->
+        <div class="card" style="text-align: center; margin-bottom: 40px;">
+            <div style="font-size: 64px; margin-bottom: 20px;">📚</div>
+            <h1 data-i18n="title">Wissenschaftliche Grundlage</h1>
+            <p data-i18n="subtitle" style="color: var(--text-medium); font-size: 18px;">
+                Wie wir deine Lebenserwartung berechnen und warum du uns vertrauen kannst
+            </p>
+        </div>
+
+        <!-- Overview -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2 data-i18n="overview_title">🎯 Überblick</h2>
+            <p data-i18n="overview_text">
+                Dr. Livelong verwendet eine Kombination aus etablierten wissenschaftlichen Studien und 
+                modernen statistischen Methoden, um deine persönliche Lebenserwartung zu berechnen. 
+                Unsere Berechnungen basieren auf mehr als 50 Jahren epidemiologischer Forschung und 
+                Daten von Millionen von Menschen weltweit.
+            </p>
+        </div>
+
+        <!-- Main Studies -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2 data-i18n="studies_title">📊 Hauptstudien</h2>
+            
+            <div style="margin: 20px 0;">
+                <h3 style="color: var(--color-coral); font-size: 20px;">1. Framingham Heart Study</h3>
+                <p style="margin: 10px 0;">
+                    <strong>Was:</strong> Die längste und umfassendste Studie zu Herz-Kreislauf-Erkrankungen<br>
+                    <strong>Seit:</strong> 1948 (über 75 Jahre Daten)<br>
+                    <strong>Teilnehmer:</strong> Über 15.000 Menschen über drei Generationen<br>
+                    <strong>Wir nutzen:</strong> Risikofaktoren für Herzkrankheiten, Schlaganfall und Gesamtmortalität
+                </p>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h3 style="color: var(--color-turquoise); font-size: 20px;">2. QRISK3</h3>
+                <p style="margin: 10px 0;">
+                    <strong>Was:</strong> Britisches Risiko-Assessment Tool für kardiovaskuläre Erkrankungen<br>
+                    <strong>Basis:</strong> Daten von über 7 Millionen Patienten<br>
+                    <strong>Besonderheit:</strong> Berücksichtigt ethnische Herkunft und sozioökonomische Faktoren<br>
+                    <strong>Wir nutzen:</strong> Erweiterte Risikofaktoren und Interaktionseffekte
+                </p>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h3 style="color: var(--color-mint); font-size: 20px;">3. PREDIMED</h3>
+                <p style="margin: 10px 0;">
+                    <strong>Was:</strong> Mediterrane Diät Studie<br>
+                    <strong>Dauer:</strong> 2003-2011<br>
+                    <strong>Teilnehmer:</strong> 7.447 Personen<br>
+                    <strong>Wir nutzen:</strong> Ernährungsfaktoren und deren Einfluss auf Langlebigkeit
+                </p>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h3 style="color: var(--color-purple); font-size: 20px;">4. Nurses' Health Study</h3>
+                <p style="margin: 10px 0;">
+                    <strong>Was:</strong> Langzeitstudie zu Frauen-Gesundheit<br>
+                    <strong>Seit:</strong> 1976<br>
+                    <strong>Teilnehmer:</strong> Über 280.000 Krankenschwestern<br>
+                    <strong>Wir nutzen:</strong> Lifestyle-Faktoren, Bewegung, Ernährung bei Frauen
+                </p>
+            </div>
+        </div>
+
+        <!-- 19 Factors -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2 data-i18n="factors_title">🧬 Unsere 19 Faktoren</h2>
+            <p style="margin-bottom: 20px;">
+                Wir analysieren 19 wissenschaftlich validierte Gesundheitsfaktoren in 5 Kategorien:
+            </p>
+
+            <div style="display: grid; gap: 15px;">
+                <div class="card card-coral" style="border-width: 2px;">
+                    <h3 style="margin: 0 0 10px 0;">💪 Körperliche Gesundheit (5 Faktoren)</h3>
+                    <p style="margin: 0; font-size: 14px;">
+                        BMI, Blutdruck, Cholesterin, Blutzucker, Körperliche Fitness
+                    </p>
+                </div>
+
+                <div class="card card-turquoise" style="border-width: 2px;">
+                    <h3 style="margin: 0 0 10px 0;">🧠 Mentale Gesundheit (3 Faktoren)</h3>
+                    <p style="margin: 0; font-size: 14px;">
+                        Stress-Level, Depression/Angst, Kognitive Funktion
+                    </p>
+                </div>
+
+                <div class="card card-mint" style="border-width: 2px;">
+                    <h3 style="margin: 0 0 10px 0;">🍎 Ernährung (4 Faktoren)</h3>
+                    <p style="margin: 0; font-size: 14px;">
+                        Ernährungsqualität, Obst/Gemüse, Verarbeitete Lebensmittel, Hydration
+                    </p>
+                </div>
+
+                <div class="card card-purple" style="border-width: 2px;">
+                    <h3 style="margin: 0 0 10px 0;">🚬 Lifestyle & Risiken (4 Faktoren)</h3>
+                    <p style="margin: 0; font-size: 14px;">
+                        Rauchen, Alkohol, Drogen, Schlafqualität
+                    </p>
+                </div>
+
+                <div class="card card-yellow" style="border-width: 2px;">
+                    <h3 style="margin: 0 0 10px 0;">👥 Sozial & Umwelt (3 Faktoren)</h3>
+                    <p style="margin: 0; font-size: 14px;">
+                        Soziale Verbindungen, Bildung, Umweltfaktoren
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculation Method -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2 data-i18n="method_title">🔬 Berechnungsmethode</h2>
+            
+            <h3 style="font-size: 18px; margin: 20px 0 10px 0;">1. Baseline Lebenserwartung</h3>
+            <p>
+                Wir starten mit der statistischen Lebenserwartung basierend auf:
+            </p>
+            <ul style="margin-left: 20px; color: var(--text-medium);">
+                <li>Aktuelles Alter</li>
+                <li>Biologisches Geschlecht</li>
+                <li>Land/Region (DE, UK, ES)</li>
+            </ul>
+            <p style="font-size: 14px; color: var(--text-light); margin-top: 10px;">
+                Quelle: WHO Global Health Observatory, Statistisches Bundesamt, ONS, INE
+            </p>
+
+            <h3 style="font-size: 18px; margin: 20px 0 10px 0;">2. Faktor-Adjustments</h3>
+            <p>
+                Jeder der 19 Faktoren wird einzeln bewertet und führt zu einer Anpassung:
+            </p>
+            <ul style="margin-left: 20px; color: var(--text-medium);">
+                <li><strong>Positiv:</strong> Gute Werte erhöhen deine Lebenserwartung (z.B. Sport: +2-4 Jahre)</li>
+                <li><strong>Negativ:</strong> Risikofaktoren reduzieren sie (z.B. Rauchen: -7-10 Jahre)</li>
+                <li><strong>J-Kurve:</strong> Manche Faktoren haben ein Optimum (z.B. Alkohol, BMI)</li>
+            </ul>
+
+            <h3 style="font-size: 18px; margin: 20px 0 10px 0;">3. Interaktionseffekte</h3>
+            <p>
+                Faktoren wirken nicht isoliert. Wir berechnen Synergien:
+            </p>
+            <ul style="margin-left: 20px; color: var(--text-medium);">
+                <li><strong>Negative Synergien:</strong> Rauchen + Diabetes = 1.8× schlimmer</li>
+                <li><strong>Positive Synergien:</strong> Sport + Gute Ernährung = 1.5× besser</li>
+            </ul>
+
+            <h3 style="font-size: 18px; margin: 20px 0 10px 0;">4. Confidence Score</h3>
+            <p>
+                Wir berechnen einen Vertrauens-Score (0-100%) basierend auf:
+            </p>
+            <ul style="margin-left: 20px; color: var(--text-medium);">
+                <li>Vollständigkeit deiner Antworten</li>
+                <li>Konsistenz der Daten</li>
+                <li>Wissenschaftliche Evidenz pro Faktor</li>
+            </ul>
+        </div>
+
+        <!-- Limitations -->
+        <div class="card" style="background: rgba(255,230,109,0.1); border: 2px solid var(--color-yellow); margin-bottom: 30px;">
+            <h2 style="color: var(--text-dark);">⚠️ Einschränkungen & Disclaimer</h2>
+            <p><strong>Dr. Livelong ist KEIN medizinisches Diagnose-Tool.</strong></p>
+            
+            <h3 style="font-size: 16px; margin: 15px 0 8px 0;">Was wir NICHT können:</h3>
+            <ul style="margin-left: 20px; color: var(--text-medium);">
+                <li>Genetische Faktoren berücksichtigen (ohne DNA-Test)</li>
+                <li>Unbekannte Erkrankungen erkennen</li>
+                <li>Zufällige Ereignisse (Unfälle) vorhersagen</li>
+                <li>Individuelle medizinische Behandlung ersetzen</li>
+            </ul>
+
+            <h3 style="font-size: 16px; margin: 15px 0 8px 0;">Wichtig zu wissen:</h3>
+            <ul style="margin-left: 20px; color: var(--text-medium);">
+                <li>Ergebnisse sind <strong>statistische Schätzungen</strong>, keine Garantien</li>
+                <li>Basiert auf <strong>Durchschnittswerten</strong> großer Populationen</li>
+                <li>Deine individuelle Biologie kann abweichen</li>
+                <li>Bei gesundheitlichen Fragen: Immer einen Arzt konsultieren</li>
+            </ul>
+        </div>
+
+        <!-- References -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2 data-i18n="references_title">📖 Hauptquellen</h2>
+            <ol style="margin-left: 20px; color: var(--text-medium); font-size: 14px; line-height: 1.8;">
+                <li>Framingham Heart Study Research Group. "The Framingham Heart Study: 75 years of discovery in metabolic disease." Nature Reviews Endocrinology (2021)</li>
+                <li>Hippisley-Cox et al. "Development and validation of QRISK3 risk prediction algorithms." BMJ (2017)</li>
+                <li>Estruch et al. "Primary Prevention of Cardiovascular Disease with a Mediterranean Diet." PREDIMED Study, NEJM (2013)</li>
+                <li>Colditz & Hankinson. "The Nurses' Health Study: lifestyle and health among women." Nature Reviews Cancer (2005)</li>
+                <li>WHO Global Health Observatory. "Life expectancy and Healthy life expectancy: Data by country" (2024)</li>
+                <li>Khaw et al. "Combined Impact of Health Behaviours and Mortality." PLoS Medicine (2008)</li>
+                <li>Li et al. "Impact of Healthy Lifestyle Factors on Life Expectancies in the US Population." Circulation (2018)</li>
+            </ol>
+        </div>
+
+        <!-- CTA -->
+        <div class="card" style="text-align: center; background: var(--gradient-primary); color: white;">
+            <h2 style="color: white; margin-bottom: 15px;">Bereit, deine Lebenserwartung zu berechnen? 🚀</h2>
+            <p style="margin-bottom: 25px;">
+                Wissenschaftlich fundiert. Kostenlos. In 10 Minuten.
+            </p>
+            <a href="meta.html" class="btn" style="background: white; color: var(--color-coral); font-weight: 700;">
+                Jetzt starten
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: rgba(255, 255, 255, 0.8); padding: 40px; text-align: center; margin-top: 60px;">
+        <p style="color: var(--text-medium); font-size: 14px;">
+            Dr. Livelong - Wissenschaftlich fundierte Lebenserwartungs-Berechnung<br>
+            © 2026 Dr. Livelong. All rights reserved.
+        </p>
+    </footer>
+
+    <!-- Language Selector Styles -->
+    <style>
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px;
+            border-radius: 20px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            filter: grayscale(1) opacity(0.5);
+        }
+
+        .lang-btn:hover {
+            filter: grayscale(0) opacity(0.8);
+            transform: scale(1.1);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            filter: grayscale(0) opacity(1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .language-selector {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script type="module">
+        // i18n Texts
+        const TEXTS = {
+            de: {
+                btn_home: 'Startseite',
+                title: 'Wissenschaftliche Grundlage',
+                subtitle: 'Wie wir deine Lebenserwartung berechnen und warum du uns vertrauen kannst',
+                overview_title: '🎯 Überblick',
+                studies_title: '📊 Hauptstudien',
+                factors_title: '🧬 Unsere 19 Faktoren',
+                method_title: '🔬 Berechnungsmethode',
+                references_title: '📖 Hauptquellen'
+            },
+            en: {
+                btn_home: 'Home',
+                title: 'Scientific Foundation',
+                subtitle: 'How we calculate your life expectancy and why you can trust us',
+                overview_title: '🎯 Overview',
+                studies_title: '📊 Main Studies',
+                factors_title: '🧬 Our 19 Factors',
+                method_title: '🔬 Calculation Method',
+                references_title: '📖 Main References'
+            },
+            es: {
+                btn_home: 'Inicio',
+                title: 'Base Científica',
+                subtitle: 'Cómo calculamos tu esperanza de vida y por qué puedes confiar en nosotros',
+                overview_title: '🎯 Descripción General',
+                studies_title: '📊 Estudios Principales',
+                factors_title: '🧬 Nuestros 19 Factores',
+                method_title: '🔬 Método de Cálculo',
+                references_title: '📖 Referencias Principales'
+            }
+        };
+
+        // Get current language
+        let currentLang = localStorage.getItem('dr_livelong_lang') || 'de';
+
+        // Update language
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('dr_livelong_lang', lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (TEXTS[lang] && TEXTS[lang][key]) {
+                    el.textContent = TEXTS[lang][key];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Language selector
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateLanguage(btn.getAttribute('data-lang'));
+            });
+        });
+
+        // Initialize
+        updateLanguage(currentLang);
+    </script>
+</body>
+</html>

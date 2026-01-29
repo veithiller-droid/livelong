@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dr. Livelong - Haupttest: 64 Fragen zu deiner Gesundheit und Lebensweise">
+    <title>Dr. Livelong - Haupttest</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Background Circles (subtler for test page) -->
+    <div class="background-circles" style="opacity: 0.5;">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+        <div class="circle circle-6"></div>
+    </div>
+
+    <!-- Header with Language Selector -->
+    <header>
+        <div class="logo">🌈 Dr. Livelong</div>
+        
+        <div class="language-selector">
+            <button class="lang-btn" data-lang="de">🇩🇪</button>
+            <button class="lang-btn" data-lang="en">🇬🇧</button>
+            <button class="lang-btn" data-lang="es">🇪🇸</button>
+        </div>
+        
+        <div style="color: var(--text-medium); font-size: 14px;">
+            <span data-i18n="step_info">Schritt 2 von 3</span>
+        </div>
+    </header>
+
+    <!-- Test Container -->
+    <div id="test-container" class="container-narrow section">
+        <!-- test.js renders everything here -->
+    </div>
+
+    <!-- Language Selector Styles -->
+    <style>
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px;
+            border-radius: 20px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            filter: grayscale(1) opacity(0.5);
+        }
+
+        .lang-btn:hover {
+            filter: grayscale(0) opacity(0.8);
+            transform: scale(1.1);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            filter: grayscale(0) opacity(1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .language-selector {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script type="module">
+        import { initTestPage } from './js/ui/test.js';
+        import { getProgress } from './js/core/state.js';
+
+        // i18n Texts
+        const TEXTS = {
+            de: {
+                step_info: 'Schritt 2 von 3'
+            },
+            en: {
+                step_info: 'Step 2 of 3'
+            },
+            es: {
+                step_info: 'Paso 2 de 3'
+            }
+        };
+
+        // Get current language
+        let currentLang = localStorage.getItem('dr_livelong_lang') || 'de';
+
+        // Update language
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('dr_livelong_lang', lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (TEXTS[lang] && TEXTS[lang][key]) {
+                    el.textContent = TEXTS[lang][key];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Language selector
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateLanguage(btn.getAttribute('data-lang'));
+                // Reload test page to re-render questions in new language
+                location.reload();
+            });
+        });
+
+        // Check if meta questions completed
+        const progress = getProgress('meta_completed');
+        if (!progress) {
+            alert('Bitte fülle zuerst die grundlegenden Fragen aus.');
+            window.location.href = 'meta.html';
+        }
+
+        // Initialize
+        updateLanguage(currentLang);
+        initTestPage();
+    </script>
+</body>
+</html>

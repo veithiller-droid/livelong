@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dr. Livelong - Deine persönlichen Empfehlungen für ein längeres Leben">
+    <title>Deine Empfehlungen - Dr. Livelong</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Background Circles -->
+    <div class="background-circles">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+        <div class="circle circle-6"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">🌈 Dr. Livelong</div>
+        
+        <div class="language-selector">
+            <button class="lang-btn" data-lang="de">🇩🇪</button>
+            <button class="lang-btn" data-lang="en">🇬🇧</button>
+            <button class="lang-btn" data-lang="es">🇪🇸</button>
+            <button class="lang-btn" data-lang="fr">🇫🇷</button>
+        </div>
+        
+        <a href="profile.html" class="btn btn-secondary">Zurück zum Profil</a>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container section">
+        
+        <!-- Intro Card -->
+        <div class="card" style="text-align: center; margin-bottom: 40px;">
+            <div style="font-size: 64px; margin-bottom: 20px;">📋</div>
+            <h1>Deine persönlichen Empfehlungen</h1>
+            <p style="color: var(--text-medium); font-size: 18px; margin: 15px 0;">
+                Basierend auf deinem Test haben wir konkrete Schritte für dich zusammengestellt.
+                <br>Diese Bereiche bieten das größte Verbesserungs-Potential.
+            </p>
+            <div id="test-date" style="font-size: 14px; color: var(--text-light); margin-top: 10px;"></div>
+        </div>
+
+        <!-- Recommendations Container -->
+        <div id="recommendations-container">
+            <!-- Wird dynamisch gefüllt -->
+        </div>
+
+        <!-- No Recommendations -->
+        <div id="no-recommendations" style="display: none;" class="card" style="text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">🎉</div>
+            <h2>Fantastisch!</h2>
+            <p style="color: var(--text-medium); font-size: 18px;">
+                Du hast keine Risikofaktoren identifiziert. Dein Lebensstil ist bereits optimal!
+                <br>Weiter so! 💪
+            </p>
+            <a href="profile.html" class="btn" style="margin-top: 20px;">Zurück zum Profil</a>
+        </div>
+
+        <!-- CTA -->
+        <div class="card" style="text-align: center; background: var(--gradient-primary); color: white; margin-top: 40px;">
+            <h3 style="color: white; margin-bottom: 15px;">💡 Tipp für nachhaltigen Erfolg</h3>
+            <p style="margin-bottom: 25px;">
+                Konzentriere dich auf 1-2 Bereiche gleichzeitig.<br>
+                Kleine, konstante Schritte sind nachhaltiger als große Sprünge.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="profile.html" class="btn" style="background: white; color: var(--color-coral);">
+                    Zurück zum Profil
+                </a>
+                <button id="download-pdf-btn" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;">
+                    📥 Als PDF downloaden
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: rgba(255, 255, 255, 0.8); padding: 40px; text-align: center; margin-top: 60px;">
+        <p style="color: var(--text-medium); font-size: 14px;">
+            Dr. Livelong - Wissenschaftlich fundierte Lebenserwartungs-Berechnung<br>
+            © 2026 Dr. Livelong. All rights reserved.
+        </p>
+    </footer>
+
+    <!-- Language Selector Styles -->
+    <style>
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px;
+            border-radius: 20px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            filter: grayscale(1) opacity(0.5);
+        }
+
+        .lang-btn:hover {
+            filter: grayscale(0) opacity(0.8);
+            transform: scale(1.1);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            filter: grayscale(0) opacity(1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        .recommendation-card {
+            margin-bottom: 30px;
+            border-width: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .factor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .factor-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .factor-emoji {
+            font-size: 48px;
+        }
+
+        .factor-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-poor {
+            background: rgba(231, 76, 60, 0.15);
+            color: #E74C3C;
+        }
+
+        .status-moderate {
+            background: rgba(230, 126, 34, 0.15);
+            color: #E67E22;
+        }
+
+        .status-neutral {
+            background: rgba(241, 196, 15, 0.15);
+            color: #F39C12;
+        }
+
+        .impact-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(255, 107, 107, 0.15);
+            color: var(--color-coral);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .section-block {
+            margin: 25px 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .steps-list {
+            margin-left: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .steps-list li {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(168, 230, 207, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-mint);
+            line-height: 1.6;
+        }
+
+        .steps-list li strong {
+            color: var(--color-turquoise);
+        }
+
+        .difficulty-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy {
+            background: rgba(168, 230, 207, 0.2);
+            color: var(--color-mint);
+        }
+
+        .difficulty-medium {
+            background: rgba(255, 230, 109, 0.2);
+            color: var(--color-yellow);
+        }
+
+        .difficulty-hard {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--color-coral);
+        }
+
+        .expected-gain {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(102, 217, 232, 0.2);
+            color: var(--color-turquoise);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .language-selector {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .factor-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .meta-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script type="module">
+        import { getCalculation, getAllMetaAnswers, getAllAnswers } from './js/core/state.js';
+        import { generateProfile } from './js/core/profile.js';
+        import { FACTORS } from './js/data/factors.js';
+
+        // Get current language
+        let currentLang = localStorage.getItem('dr_livelong_lang') || 'de';
+
+        // Load calculation and generate profile FIRST (before any function calls)
+        const calculation = getCalculation();
+
+        if (!calculation || !calculation.timestamp) {
+            alert('Keine Test-Daten gefunden. Bitte führe zuerst den Test durch.');
+            window.location.href = 'meta.html';
+        }
+
+        const meta = getAllMetaAnswers();
+        const answers = getAllAnswers();
+        const profile = generateProfile(calculation, meta, answers);
+
+        // Update language function
+        function updateLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('dr_livelong_lang', lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+
+            renderRecommendations();
+        }
+
+        // Language selector
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateLanguage(btn.getAttribute('data-lang'));
+            });
+        });
+
+        // Render recommendations
+        function renderRecommendations() {
+            const container = document.getElementById('recommendations-container');
+            const noRecommendations = document.getElementById('no-recommendations');
+
+            // Show test date
+            const testDate = new Date(calculation.timestamp || Date.now());
+            document.getElementById('test-date').textContent = 
+                `Test vom ${testDate.toLocaleDateString(currentLang === 'de' ? 'de-DE' : currentLang === 'en' ? 'en-US' : currentLang === 'es' ? 'es-ES' : 'fr-FR')}`;
+
+            // Check if we have any recommendations
+            const hasFactorActions = Object.values(profile.factor_analysis.factors).some(
+                f => f.actionable_items && f.actionable_items.length > 0
+            );
+            const hasProfileRecs = profile.recommendations && profile.recommendations.length > 0;
+
+            if (!hasFactorActions && !hasProfileRecs) {
+                container.style.display = 'none';
+                noRecommendations.style.display = 'block';
+                return;
+            }
+
+            container.innerHTML = '';
+            noRecommendations.style.display = 'none';
+
+           // SECTION 1: Quick Actions (nur Faktoren mit Verbesserungspotential)
+const factorsWithActions = [];
+for (const [factorId, factorData] of Object.entries(profile.factor_analysis.factors)) {
+    if (factorData.actionable_items && factorData.actionable_items.length > 0) {
+        // Nur anzeigen wenn negativer Impact (Penalty < 0)
+        if ((factorData.impact || 0) < 0) {
+            factorsWithActions.push({
+                id: factorId,
+                data: factorData,
+                penalty: factorData.impact || 0
+            });
+        }
+    }
+}
+            factorsWithActions.sort((a, b) => a.penalty - b.penalty);
+
+            if (factorsWithActions.length > 0) {
+                const quickActionsTitle = document.createElement('h2');
+                quickActionsTitle.style.cssText = `
+                    font-size: 32px;
+                    margin: 40px 0 20px 0;
+                    text-align: center;
+                    color: var(--text-dark);
+                `;
+                quickActionsTitle.textContent = {
+                    de: '⚡ Schnelle Aktionen',
+                    en: '⚡ Quick Actions',
+                    es: '⚡ Acciones Rápidas',
+                    fr: '⚡ Actions Rapides'
+                }[currentLang];
+                container.appendChild(quickActionsTitle);
+
+                factorsWithActions.forEach(factor => {
+                    const card = createQuickActionCard(factor.id, factor.data);
+                    container.appendChild(card);
+                });
+            }
+
+            // SECTION 2: Detailed Recommendations
+            if (hasProfileRecs) {
+                const detailedTitle = document.createElement('h2');
+                detailedTitle.style.cssText = `
+                    font-size: 32px;
+                    margin: 60px 0 20px 0;
+                    text-align: center;
+                    color: var(--text-dark);
+                `;
+                detailedTitle.textContent = {
+                    de: '📋 Detaillierte Empfehlungen',
+                    en: '📋 Detailed Recommendations',
+                    es: '📋 Recomendaciones Detalladas',
+                    fr: '📋 Recommandations Détaillées'
+                }[currentLang];
+                container.appendChild(detailedTitle);
+
+                const subtitle = document.createElement('p');
+                subtitle.style.cssText = `
+                    text-align: center;
+                    color: var(--text-medium);
+                    font-size: 16px;
+                    margin-bottom: 30px;
+                `;
+                subtitle.textContent = {
+                    de: 'Priorisiert nach Wichtigkeit und Umsetzbarkeit',
+                    en: 'Prioritized by importance and feasibility',
+                    es: 'Priorizadas por importancia y viabilidad',
+                    fr: 'Priorisées par importance et faisabilité'
+                }[currentLang];
+                container.appendChild(subtitle);
+
+                profile.recommendations.forEach((rec, index) => {
+                    const card = createDetailedRecommendationCard(rec, index + 1);
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        // Create Quick Action Card
+        function createQuickActionCard(factorId, factorData) {
+            const factorDef = FACTORS[factorId];
+            if (!factorDef) return document.createElement('div');
+
+            const card = document.createElement('div');
+            card.className = 'card recommendation-card';
+
+            const levelColors = {
+                poor: 'card-coral',
+                moderate: 'card-yellow',
+                neutral: 'card-mint'
+            };
+            card.classList.add(levelColors[factorData.level] || 'card-mint');
+
+            const name = factorDef.label[currentLang] || factorDef.label.de;
+            const emoji = factorDef.icon || '❓';
+
+            const statusLabels = {
+                poor: { de: 'Kritisch', en: 'Critical', es: 'Crítico', fr: 'Critique' },
+                moderate: { de: 'Verbesserungswürdig', en: 'Needs Improvement', es: 'Mejorable', fr: 'À améliorer' },
+                neutral: { de: 'Neutral', en: 'Neutral', es: 'Neutral', fr: 'Neutre' }
+            };
+            const statusLabel = statusLabels[factorData.level]?.[currentLang] || 'Neutral';
+
+            const penalty = Math.abs(factorData.impact || 0);
+            const impactLabel = {
+                de: `${penalty.toFixed(1)} Jahre`,
+                en: `${penalty.toFixed(1)} years`,
+                es: `${penalty.toFixed(1)} años`,
+                fr: `${penalty.toFixed(1)} ans`
+            }[currentLang];
+
+            const whyImportant = factorData.interpretation[currentLang] || factorData.interpretation.de;
+
+            const whyTitle = {
+                de: '❓ Warum ist das wichtig?',
+                en: '❓ Why is this important?',
+                es: '❓ ¿Por qué es importante?',
+                fr: '❓ Pourquoi est-ce important?'
+            }[currentLang];
+
+        // Nutze den absoluten Impact als Potential Gain (wenn man optimiert, gewinnt man die Jahre zurück)
+const totalPotentialGain = Math.abs(factorData.impact || 0);
+
+const difficultyLabel = {
+    de: 'Schwierigkeit:',
+    en: 'Difficulty:',
+    es: 'Dificultad:',
+    fr: 'Difficulté:'
+}[currentLang];
+
+const gainLabel = {
+    de: `Bis zu +${totalPotentialGain.toFixed(1)} Jahre möglich`,
+    en: `Up to +${totalPotentialGain.toFixed(1)} years possible`,
+    es: `Hasta +${totalPotentialGain.toFixed(1)} años posible`,
+    fr: `Jusqu'à +${totalPotentialGain.toFixed(1)} ans possible`
+}[currentLang];
+
+const hasCritical = factorData.actionable_items.some(i => i.priority === 'critical');
+const difficulty = hasCritical ? 'hard' : 'medium';
+const difficultyIcons = {
+    easy: '✅',
+    medium: '⚠️',
+    hard: '🔥'
+};
+
+            card.innerHTML = `
+                <div class="factor-header">
+                    <div class="factor-title">
+                        <span class="factor-emoji">${emoji}</span>
+                        <span>${name}</span>
+                    </div>
+                    <div class="factor-status">
+                        <span class="status-badge status-${factorData.level}">${statusLabel}</span>
+                        <span class="impact-badge">-${impactLabel}</span>
+                    </div>
+                </div>
+                <div class="section-block">
+                    <div class="section-title">${whyTitle}</div>
+                    <p style="color: var(--text-medium); line-height: 1.8;">${whyImportant}</p>
+                </div>
+               
+                <div class="meta-info">
+                    <div>
+                        <span style="color: var(--text-light); font-size: 14px; margin-right: 10px;">${difficultyLabel}</span>
+                        <span class="difficulty-indicator difficulty-${difficulty}">
+                            ${difficultyIcons[difficulty]} ${difficulty === 'hard' ? 'Schwer' : 'Mittel'}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="expected-gain">🎯 ${gainLabel}</span>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Create Detailed Recommendation Card
+        function createDetailedRecommendationCard(rec, priority) {
+            const priorityColors = {
+                critical: '#e74c3c',
+                high: '#e67e22',
+                medium: '#f39c12',
+                low: '#3498db'
+            };
+
+            const difficultyIcons = {
+                easy: '😊',
+                moderate: '🤔',
+                hard: '💪',
+                very_hard: '🏔️'
+            };
+
+            const card = document.createElement('div');
+            card.className = 'card recommendation-card';
+            card.style.cssText = `
+                border: 3px solid ${priorityColors[rec.priority]};
+                margin-bottom: 30px;
+            `;
+
+            const header = document.createElement('div');
+            header.style.cssText = `
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 15px;
+            `;
+
+            const titleDiv = document.createElement('div');
+            titleDiv.style.cssText = 'flex: 1;';
+
+            const priorityBadge = document.createElement('div');
+            priorityBadge.style.cssText = `
+                background: ${priorityColors[rec.priority]};
+                color: white;
+                padding: 5px 12px;
+                border-radius: 12px;
+                font-size: 12px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                display: inline-block;
+            `;
+            priorityBadge.textContent = `PRIORITÄT ${priority}`;
+
+            const title = document.createElement('h3');
+            title.style.cssText = `
+                margin: 10px 0 5px 0;
+                font-size: 22px;
+            `;
+            title.textContent = rec.title[currentLang];
+
+            const gain = document.createElement('div');
+            gain.style.cssText = `
+                font-size: 24px;
+                font-weight: bold;
+                color: #2ecc71;
+                text-align: right;
+            `;
+            gain.textContent = `+${rec.potential_gain.toFixed(1)} Jahre`;
+
+            titleDiv.appendChild(priorityBadge);
+            titleDiv.appendChild(title);
+            header.appendChild(titleDiv);
+            header.appendChild(gain);
+
+            const description = document.createElement('p');
+            description.style.cssText = `
+                font-size: 15px;
+                line-height: 1.6;
+                margin: 15px 0;
+                color: #34495e;
+            `;
+            description.textContent = rec.description[currentLang];
+
+            const meta = document.createElement('div');
+            meta.style.cssText = `
+                display: flex;
+                gap: 15px;
+                margin: 15px 0;
+                font-size: 14px;
+                flex-wrap: wrap;
+            `;
+
+            const difficulty = document.createElement('div');
+            difficulty.innerHTML = `
+                <strong>Schwierigkeit:</strong> 
+                ${difficultyIcons[rec.difficulty]} 
+                ${rec.difficulty}
+            `;
+
+            const timeframe = document.createElement('div');
+            timeframe.innerHTML = `
+                <strong>Zeitrahmen:</strong> ${rec.timeframe}
+            `;
+
+            meta.appendChild(difficulty);
+            meta.appendChild(timeframe);
+
+            const whyMatters = document.createElement('div');
+            whyMatters.style.cssText = `
+                background: #e8f4f8;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+            `;
+
+            const whyTitle = document.createElement('div');
+            whyTitle.style.cssText = `
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #2c3e50;
+            `;
+            whyTitle.textContent = '💡 Warum das wichtig ist:';
+
+            const whyList = document.createElement('ul');
+            whyList.style.cssText = `
+                margin: 0;
+                padding-left: 20px;
+                font-size: 14px;
+            `;
+
+            rec.why_it_matters[currentLang].forEach(point => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '5px';
+                li.textContent = point;
+                whyList.appendChild(li);
+            });
+
+            whyMatters.appendChild(whyTitle);
+            whyMatters.appendChild(whyList);
+
+            const actionSteps = document.createElement('div');
+            actionSteps.style.cssText = `
+                background: #f0fff4;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+            `;
+
+            const actionTitle = document.createElement('div');
+            actionTitle.style.cssText = `
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #2c3e50;
+            `;
+            actionTitle.textContent = '📋 Konkrete Schritte:';
+
+            const actionList = document.createElement('ol');
+            actionList.style.cssText = `
+                margin: 0;
+                padding-left: 20px;
+                font-size: 14px;
+            `;
+
+            rec.action_steps[currentLang].forEach(step => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '8px';
+                li.textContent = step;
+                actionList.appendChild(li);
+            });
+
+            actionSteps.appendChild(actionTitle);
+            actionSteps.appendChild(actionList);
+
+            const expandButton = document.createElement('button');
+            expandButton.style.cssText = `
+                width: 100%;
+                padding: 12px;
+                background: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+                margin-top: 15px;
+                transition: background 0.2s;
+            `;
+            expandButton.textContent = '📖 Details anzeigen';
+
+            const detailsDiv = document.createElement('div');
+            detailsDiv.style.cssText = `
+                display: none;
+                margin-top: 15px;
+            `;
+
+            if (rec.implementation_timeline) {
+                const timeline = createTimeline(rec.implementation_timeline[currentLang]);
+                detailsDiv.appendChild(timeline);
+            }
+
+            if (rec.success_metrics) {
+                const metrics = createMetrics(rec.success_metrics[currentLang]);
+                detailsDiv.appendChild(metrics);
+            }
+
+            if (rec.barriers) {
+                const barriers = createBarriers(rec.barriers[currentLang]);
+                detailsDiv.appendChild(barriers);
+            }
+
+            if (rec.support_resources) {
+                const resources = createResources(rec.support_resources[currentLang]);
+                detailsDiv.appendChild(resources);
+            }
+
+            let expanded = false;
+            expandButton.addEventListener('click', () => {
+                expanded = !expanded;
+                detailsDiv.style.display = expanded ? 'block' : 'none';
+                expandButton.textContent = expanded ? '📖 Details ausblenden' : '📖 Details anzeigen';
+            });
+
+            expandButton.addEventListener('mouseenter', () => {
+                expandButton.style.background = '#e9ecef';
+            });
+            expandButton.addEventListener('mouseleave', () => {
+                expandButton.style.background = '#f8f9fa';
+            });
+
+            const scientific = document.createElement('div');
+            scientific.style.cssText = `
+                margin-top: 15px;
+                padding: 10px;
+                background: #f8f9fa;
+                border-radius: 6px;
+                font-size: 12px;
+                color: #666;
+            `;
+            scientific.innerHTML = `<strong>📚 Wissenschaftliche Basis:</strong> ${rec.scientific_basis[currentLang]}`;
+
+            card.appendChild(header);
+            card.appendChild(description);
+            card.appendChild(meta);
+            card.appendChild(whyMatters);
+            card.appendChild(actionSteps);
+            card.appendChild(expandButton);
+            card.appendChild(detailsDiv);
+            card.appendChild(scientific);
+
+            return card;
+        }
+
+        // Helper functions for detailed recommendations
+        function createTimeline(timeline) {
+            const container = document.createElement('div');
+            container.style.cssText = `
+                margin-bottom: 15px;
+                padding: 15px;
+                background: #fff3cd;
+                border-radius: 8px;
+            `;
+
+            const title = document.createElement('div');
+            title.style.cssText = `
+                font-weight: bold;
+                margin-bottom: 10px;
+            `;
+            title.textContent = '⏱️ Umsetzungs-Timeline:';
+
+            const list = document.createElement('ul');
+            list.style.cssText = `
+                margin: 0;
+                padding-left: 20px;
+                font-size: 13px;
+            `;
+
+            timeline.forEach(phase => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '5px';
+                li.textContent = phase;
+                list.appendChild(li);
+            });
+
+            container.appendChild(title);
+            container.appendChild(list);
+
+            return container;
+        }
+
+        function createMetrics(metrics) {
+            const container = document.createElement('div');
+            container.style.cssText = `
+                margin-bottom: 15px;
+                padding: 15px;
+                background: #e8f4f8;
+                border-radius: 8px;
+            `;
+
+            const title = document.createElement('div');
+            title.style.cssText = `
+                font-weight: bold;
+                margin-bottom: 10px;
+            `;
+            title.textContent = '📊 Erfolgsmetriken:';
+
+            const list = document.createElement('div');
+            list.style.cssText = `
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                font-size: 13px;
+            `;
+
+            metrics.forEach(metric => {
+                const badge = document.createElement('span');
+                badge.style.cssText = `
+                    background: #3498db;
+                    color: white;
+                    padding: 5px 10px;
+                    border-radius: 12px;
+                `;
+                badge.textContent = metric;
+                list.appendChild(badge);
+            });
+
+            container.appendChild(title);
+            container.appendChild(list);
+
+            return container;
+        }
+
+        function createBarriers(barriers) {
+            const container = document.createElement('div');
+            container.style.cssText = `
+                margin-bottom: 15px;
+                padding: 15px;
+                background: #fff5f5;
+                border-radius: 8px;
+            `;
+
+            const title = document.createElement('div');
+            title.style.cssText = `
+                font-weight: bold;
+                margin-bottom: 10px;
+            `;
+            title.textContent = '⚠️ Mögliche Hindernisse:';
+
+            const list = document.createElement('ul');
+            list.style.cssText = `
+                margin: 0;
+                padding-left: 20px;
+                font-size: 13px;
+            `;
+
+            barriers.forEach(barrier => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '5px';
+                li.textContent = barrier;
+                list.appendChild(li);
+            });
+
+            container.appendChild(title);
+            container.appendChild(list);
+
+            return container;
+        }
+
+        function createResources(resources) {
+            const container = document.createElement('div');
+            container.style.cssText = `
+                margin-bottom: 15px;
+                padding: 15px;
+                background: #f0fff4;
+                border-radius: 8px;
+            `;
+
+            const title = document.createElement('div');
+            title.style.cssText = `
+                font-weight: bold;
+                margin-bottom: 10px;
+            `;
+            title.textContent = '🔗 Hilfreiche Ressourcen:';
+
+            const list = document.createElement('ul');
+            list.style.cssText = `
+                margin: 0;
+                padding-left: 20px;
+                font-size: 13px;
+            `;
+
+            resources.forEach(resource => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '5px';
+                li.textContent = resource;
+                list.appendChild(li);
+            });
+
+            container.appendChild(title);
+            container.appendChild(list);
+
+            return container;
+        }
+
+        // PDF Download
+        document.getElementById('download-pdf-btn').addEventListener('click', () => {
+            alert('PDF-Download kommt in v2.0! 📥');
+        });
+
+        // Initialize language and render
+        updateLanguage(currentLang);
+    </script>
+</body>
+</html>

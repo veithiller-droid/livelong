@@ -151,51 +151,97 @@
         </div>
 
         <!-- Calculation Method -->
-        <div class="card" style="margin-bottom: 30px;">
-            <h2 data-i18n="method_title">🔬 Berechnungsmethode</h2>
-            
-            <h3 style="font-size: 18px; margin: 20px 0 10px 0;">1. Baseline Lebenserwartung</h3>
-            <p>
-                Wir starten mit der statistischen Lebenserwartung basierend auf:
-            </p>
-            <ul style="margin-left: 20px; color: var(--text-medium);">
-                <li>Aktuelles Alter</li>
-                <li>Biologisches Geschlecht</li>
-                <li>Land/Region (DE, UK, ES)</li>
-            </ul>
-            <p style="font-size: 14px; color: var(--text-light); margin-top: 10px;">
-                Quelle: WHO Global Health Observatory, Statistisches Bundesamt, ONS, INE
-            </p>
+        <!-- Calculation Method -->
+<div class="card" style="margin-bottom: 30px;">
+    <h2 data-i18n="method_title">🔬 Berechnungsmethode</h2>
+    
+    <h3 style="font-size: 18px; margin: 20px 0 10px 0;">1. Baseline Lebenserwartung</h3>
+    <p>
+        Wir starten mit der statistischen Lebenserwartung basierend auf:
+    </p>
+    <ul style="margin-left: 20px; color: var(--text-medium);">
+        <li>Aktuelles Alter</li>
+        <li>Biologisches Geschlecht</li>
+        <li>Land/Region (DE, UK, ES)</li>
+    </ul>
+    <p style="font-size: 14px; color: var(--text-light); margin-top: 10px;">
+        Quelle: WHO Global Health Observatory, Statistisches Bundesamt, ONS, INE
+    </p>
 
-            <h3 style="font-size: 18px; margin: 20px 0 10px 0;">2. Faktor-Adjustments</h3>
-            <p>
-                Jeder der 19 Faktoren wird einzeln bewertet und führt zu einer Anpassung:
-            </p>
-            <ul style="margin-left: 20px; color: var(--text-medium);">
-                <li><strong>Positiv:</strong> Gute Werte erhöhen deine Lebenserwartung (z.B. Sport: +2-4 Jahre)</li>
-                <li><strong>Negativ:</strong> Risikofaktoren reduzieren sie (z.B. Rauchen: -7-10 Jahre)</li>
-                <li><strong>J-Kurve:</strong> Manche Faktoren haben ein Optimum (z.B. Alkohol, BMI)</li>
-            </ul>
+    <h3 style="font-size: 18px; margin: 20px 0 10px 0;">2. Penalty-System</h3>
+    <p>
+        <strong>Unser Ansatz unterscheidet sich grundlegend von anderen Rechnern:</strong> 
+        Du startest beim statistischen Maximum deines Landes (z.B. Deutschland: 96 Jahre, 
+        Spanien: 99 Jahre). Jeder Risikofaktor zieht davon ab – wer seinen Körper gut 
+        behandelt, wird nicht bestraft.
+    </p>
+    <p style="margin: 15px 0;">
+        <strong>Die Philosophie:</strong> "Wer seinen Körper gut behandelt, wird nicht bestraft"
+    </p>
+    <ul style="margin-left: 20px; color: var(--text-medium); line-height: 1.8;">
+        <li><strong style="color: var(--color-mint);">Optimales Verhalten = 0 Penalty</strong><br>
+            Beispiele: Nichtraucher, regelmäßiger Sport, mediterrane Ernährung, gesunder BMI<br>
+            Du bleibst beim Maximum deines Landes</li>
+        <li><strong style="color: var(--color-yellow);">Leichte Risiken = -1 bis -3 Jahre</strong><br>
+            Beispiele: Gelegentlicher Alkohol, leichtes Übergewicht, moderater Stress</li>
+        <li><strong style="color: var(--color-coral);">Moderate Risiken = -4 bis -8 Jahre</strong><br>
+            Beispiele: Bewegungsmangel, schlechte Ernährung, hoher Blutdruck</li>
+        <li><strong style="color: #E74C3C;">Schwere Risiken = -10 bis -18 Jahre</strong><br>
+            Beispiele: Aktives Rauchen, starkes Übergewicht, Diabetes Typ 2, chronischer Alkoholmissbrauch</li>
+    </ul>
 
-            <h3 style="font-size: 18px; margin: 20px 0 10px 0;">3. Interaktionseffekte</h3>
-            <p>
-                Faktoren wirken nicht isoliert. Wir berechnen Synergien:
-            </p>
-            <ul style="margin-left: 20px; color: var(--text-medium);">
-                <li><strong>Negative Synergien:</strong> Rauchen + Diabetes = 1.8× schlimmer</li>
-                <li><strong>Positive Synergien:</strong> Sport + Gute Ernährung = 1.5× besser</li>
-            </ul>
+    <div style="background: rgba(168, 230, 207, 0.2); padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 4px solid var(--color-mint);">
+        <p style="margin: 0 0 10px 0; font-weight: 600;">📊 Beispiel-Berechnung:</p>
+        <p style="margin: 0; font-family: monospace; line-height: 1.8;">
+            Mann, 60 Jahre, Deutschland<br>
+            <strong>Start:</strong> 96 Jahre (Länder-Maximum)<br>
+            <br>
+            <strong>Penalties:</strong><br>
+            - Ex-Raucher (aufgehört vor 3 Jahren): <span style="color: #E74C3C;">-5 Jahre</span><br>
+            - Verarbeitete Lebensmittel (täglich Wurst): <span style="color: var(--color-coral);">-4 Jahre</span><br>
+            - Kein regelmäßiger Sport: <span style="color: var(--color-coral);">-5 Jahre</span><br>
+            - Erhöhtes Cholesterin: <span style="color: var(--color-yellow);">-2 Jahre</span><br>
+            <br>
+            <strong>Gesamt-Penalty:</strong> <span style="color: #E74C3C;">-16 Jahre</span><br>
+            <strong>Ergebnis:</strong> 96 - 16 = <strong style="color: var(--color-turquoise); font-size: 20px;">80 Jahre</strong>
+        </p>
+    </div>
 
-            <h3 style="font-size: 18px; margin: 20px 0 10px 0;">4. Confidence Score</h3>
-            <p>
-                Wir berechnen einen Vertrauens-Score (0-100%) basierend auf:
-            </p>
-            <ul style="margin-left: 20px; color: var(--text-medium);">
-                <li>Vollständigkeit deiner Antworten</li>
-                <li>Konsistenz der Daten</li>
-                <li>Wissenschaftliche Evidenz pro Faktor</li>
-            </ul>
-        </div>
+    <p style="font-size: 14px; color: var(--text-light); margin-top: 10px;">
+        <strong>Wichtig:</strong> Die Penalties basieren auf wissenschaftlichen Studien, die 
+        zeigen, wie stark einzelne Risikofaktoren die durchschnittliche Lebenserwartung 
+        in großen Bevölkerungsgruppen verkürzen.
+    </p>
+
+    <h3 style="font-size: 18px; margin: 20px 0 10px 0;">3. Kumulative Effekte</h3>
+    <p>
+        Risikofaktoren wirken nicht isoliert – sie summieren sich und können sich gegenseitig verstärken:
+    </p>
+    <ul style="margin-left: 20px; color: var(--text-medium); line-height: 1.8;">
+        <li><strong>Additive Effekte:</strong> Mehrere moderate Risiken summieren sich<br>
+            <em>Beispiel:</em> Bewegungsmangel (-5 Jahre) + Schlechte Ernährung (-4 Jahre) + 
+            Stress (-3 Jahre) = -12 Jahre gesamt</li>
+        <li><strong>Verstärkende Effekte:</strong> Manche Kombinationen sind besonders gefährlich<br>
+            <em>Beispiel:</em> Rauchen + Diabetes + Bluthochdruck = Herzinfarkt-Risiko vervielfacht sich</li>
+        <li><strong>Kaskadeneffekte:</strong> Ein Risikofaktor führt zum nächsten<br>
+            <em>Beispiel:</em> Übergewicht → Diabetes → Herz-Kreislauf-Erkrankungen</li>
+    </ul>
+    <p style="font-size: 14px; color: var(--text-light); margin-top: 10px;">
+        <strong>Gute Nachricht:</strong> Das funktioniert auch umgekehrt – wer einen Risikofaktor 
+        eliminiert, reduziert oft automatisch auch andere (z.B. Rauchstopp → bessere Fitness → 
+        weniger Stress).
+    </p>
+
+    <h3 style="font-size: 18px; margin: 20px 0 10px 0;">4. Confidence Score</h3>
+    <p>
+        Wir berechnen einen Vertrauens-Score (0-100%) basierend auf:
+    </p>
+    <ul style="margin-left: 20px; color: var(--text-medium);">
+        <li>Vollständigkeit deiner Antworten</li>
+        <li>Konsistenz der Daten</li>
+        <li>Wissenschaftliche Evidenz pro Faktor</li>
+    </ul>
+</div>
 
         <!-- Limitations -->
         <div class="card" style="background: rgba(255,230,109,0.1); border: 2px solid var(--color-yellow); margin-bottom: 30px;">

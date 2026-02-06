@@ -6,6 +6,7 @@
 import { FACTORS, CLUSTERS, getFactorById, getClusterForFactor } from '../data/factors.js';
 import { RECOMMENDATIONS, getRecommendationsForUser } from '../data/recommendations.js';
 import { getFactorLevel, getRiskLevel } from './scoring.js';
+import { getAgeContext } from '../ui/profile_render.js';
 import { UI_TEXTS } from '../data/texts.js';
 
 const PROFILE_VERSION = "1.0.0";
@@ -102,8 +103,9 @@ function generateRiskProfile(calculation) {
     i.type === 'synergy_negative' && i.severity === 'high'
   );
   
-  const riskFactorCount = Object.values(calculation.factors).filter(f => f.score < 50).length;
-  const protectiveFactorCount = Object.values(calculation.factors).filter(f => f.score >= 60).length;
+const riskFactorCount = Object.values(calculation.factors).filter(f => 
+  f.score < 80 && f.impact < 0
+).length;  const protectiveFactorCount = Object.values(calculation.factors).filter(f => f.score >= 60).length;
   
   let description_de, description_en, description_es;
   let recommendations_de, recommendations_en, recommendations_es;
@@ -164,10 +166,14 @@ function generateRiskProfile(calculation) {
 function generateFactorAnalysis(factors, meta, answers) {
   const analysis = {};
   
+  // Calculate age once
+  const age = meta.meta_birth_year ? new Date().getFullYear() - meta.meta_birth_year : null;
+  
   for (const [factorId, factorData] of Object.entries(factors)) {
     const factor = getFactorById(factorId);
-    const level = getFactorLevel(factorData.score);
-    const cluster = getClusterForFactor(factorId);
+const level = getFactorLevel(factorData.score, factorData.penalty);
+console.log(`${factorId}: score=${factorData.score}, level=${level}`);
+const cluster = getClusterForFactor(factorId);
     
     const interpretation = interpretFactor(factorId, factorData, level, meta, answers);
     const actionable = generateActionableItems(factorId, factorData, meta, answers);
@@ -178,8 +184,10 @@ function generateFactorAnalysis(factors, meta, answers) {
       cluster_id: cluster ? cluster.id : null,
       interpretation,
       actionable_items: actionable,
-      medical_context: getMedicalContext(factorId, factorData, meta, answers)
+      medical_context: getMedicalContext(factorId, factorData, meta, answers),
+      age_context: getAgeContext(factorId, factorData.score, level, age)  // ← NEU!
     };
+    
   }
   
   const clusterSummary = generateClusterSummary(analysis);
@@ -217,25 +225,23 @@ function interpretFactor(factorId, factorData, level, meta, answers) {
 }
 
 function generateActionableItems(factorId, factorData, meta, answers) {
-  const items = [];
-  
-  if (factorData.score >= 70) {
-    items.push({
-      type: 'maintain',
-      priority: 'low',
-      description: {
-        de: "Halte deine guten Gewohnheiten bei",
-        en: "Maintain your good habits",
-        es: "Mantén tus buenos hábitos"
-      }
-    });
-    return items;
+  // Score >= 90: Wirklich gut, keine Actions nötig
+  if (factorData.score >= 90) {
+    return [];
   }
   
-  const specificActions = getFactorSpecificActions(factorId, factorData, meta, answers);
-  return specificActions;
+  // Score 70-89: Hol spezifische Actions, aber nur wenn Impact signifikant
+  if (factorData.score >= 70) {
+    // Nur Actions wenn Impact < -2 Jahre (signifikanter Penalty)
+    if (factorData.impact && factorData.impact < -2) {
+      return getFactorSpecificActions(factorId, factorData, meta, answers);
+    }
+    return [];
+  }
+  
+  // Score < 70: Immer spezifische Actions
+  return getFactorSpecificActions(factorId, factorData, meta, answers);
 }
-
 function getFactorSpecificActions(factorId, factorData, meta, answers) {
   const actionMap = {
     cardiovascular: [
@@ -392,23 +398,25 @@ function getMedicalContext(factorId, factorData, meta, answers) {
       }
     },
     
-    metabolic: {
+  metabolic: {
       key_markers: ["HbA1c", "Nüchtern-Glukose", "BMI", "Bauchumfang", "Lipidprofil"],
       risk_models: ["FINDRISC", "Diabetes Risk Calculator"],
       screening: {
         de: "HbA1c/Glukose alle 3 Jahre (ab 45), jährlich bei Prädiabetes/Übergewicht",
         en: "HbA1c/glucose every 3 years (from 45), annually with prediabetes/overweight",
-        es: "HbA1c/glucosa cada 3 años (desde 45), anualmente con prediabetes/sobrepeso"
+        es: "HbA1c/glucosa cada 3 años (desde 45), anualmente con prediabetes/sobrepeso",
+        fr: "HbA1c/glucose tous les 3 ans (à partir de 45), annuellement en cas de prédiabète/surpoids"
       }
     },
     
     lifestyle_smoke: {
-      key_markers: ["Packungsjahre", "CO-Wert", "Lungenfunktion"],
+      key_markers: ["Zigaretten pro Tag und Jahre geraucht", "CO-Wert", "Lungenfunktion"],
       risk_models: ["Lung Cancer Risk Calculator"],
       screening: {
-        de: "Low-Dose-CT jährlich ab 50 bei >20 Packungsjahren (USA: USPSTF-Empfehlung)",
-        en: "Low-dose CT annually from 50 with >20 pack-years (USA: USPSTF recommendation)",
-        es: "TC de baja dosis anualmente desde 50 con >20 años-paquete (EE.UU.: recomendación USPSTF)"
+        de: "Low-Dose-CT jährlich ab 50 bei >20 Jahren starkem Rauchen (USA: USPSTF-Empfehlung)",
+        en: "Low-dose CT annually from 50 with >20 years heavy smoking (USA: USPSTF recommendation)",
+        es: "TC de baja dosis anualmente desde 50 con >20 años de fumar mucho (EE.UU.: recomendación USPSTF)",
+        fr: "Scanner low-dose annuellement dès 50 ans avec >20 ans de tabagisme important (USA: recommandation USPSTF)"
       }
     }
   };
@@ -850,6 +858,8 @@ function generateInsights(calculation, meta, answers) {
       }
     });
   }
+
+
   
   return insights;
 }

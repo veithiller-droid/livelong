@@ -1,7 +1,7 @@
 // data/baselines.js
 // Lebenserwartungs-Baselines nach Land, Geschlecht und Alter
+// VERSION 2.0.0 - Erweitert für Penalty-System
 // Basierend auf offiziellen Sterbetafeln 2022-2024
-// Version 1.0.0
 
 /**
  * DATENQUELLEN:
@@ -29,6 +29,12 @@
  * WICHTIG: Die Werte sind "verbleibende Lebenserwartung" ab dem angegebenen Alter.
  * Um das Gesamt-Lebensalter zu berechnen: currentAge + baseline[age]
  */
+
+// ========================================
+// BASELINES - DURCHSCHNITTLICHE LEBENSERWARTUNG
+// ========================================
+// Diese Werte repräsentieren die DURCHSCHNITTLICHE Lebenserwartung
+// und werden für VERGLEICHE verwendet ("Du liegst X Jahre über/unter Durchschnitt")
 
 export const BASELINES = {
   // ========================================
@@ -303,7 +309,156 @@ export const BASELINES = {
 };
 
 // ========================================
-// HELPER FUNCTIONS
+// COUNTRY MAXIMUMS - FÜR PENALTY SYSTEM
+// ========================================
+// Diese Werte repräsentieren das MAXIMUM bei perfektem Leben
+// und sind der STARTPUNKT für die Penalty-Berechnung
+// 
+// PHILOSOPHIE:
+// - Start: Country Maximum (99 Jahre für beste Länder)
+// - Schlechtes Verhalten = Penalty (Abzug)
+// - Gutes Verhalten = Keine Penalty (0)
+// - Resultat: Maximale Lebenserwartung für dieses Land
+//
+// BEGRÜNDUNG DER WERTE:
+// - Japan: 100 (Okinawa Blue Zone, höchste Lebenserwartung weltweit)
+// - Spanien/Italien/Griechenland: 99 (Mediterrane Ernährung, Blue Zones)
+// - Schweiz/Nordeuropa: 97-98 (Exzellente Gesundheitssysteme)
+// - Deutschland/UK/Frankreich: 96 (Gute Systeme, nicht optimal)
+// - USA: 95 (Adipositas-Epidemie, Healthcare-Zugang)
+// - Other: 95 (Konservativer globaler Durchschnitt)
+
+export const COUNTRY_MAXIMUM = {
+  // Blue Zones & Top Countries
+  'japan': 100,
+  'jp': 100,
+  
+  'italy': 99,
+  'it': 99,
+  
+  'spain': 99,
+  'es': 99,
+  
+  'greece': 99,
+  'gr': 99,
+  
+  // Sehr gute Systeme
+  'switzerland': 98,
+  'ch': 98,
+  
+  'singapore': 98,
+  'sg': 98,
+  
+  'australia': 98,
+  'au': 98,
+  
+  'iceland': 98,
+  'is': 98,
+  
+  'norway': 97,
+  'no': 97,
+  
+  'sweden': 97,
+  'se': 97,
+  
+  'netherlands': 97,
+  'nl': 97,
+  
+  'france': 97,
+  'fr': 97,
+  
+  'canada': 97,
+  'ca': 97,
+  
+  'south_korea': 98,
+  'kr': 98,
+  
+  'new_zealand': 97,
+  'nz': 97,
+  
+  // Gute Systeme
+  'germany': 96,
+  'de': 96,
+  
+  'united_kingdom': 96,
+  'uk': 96,
+  'gb': 96,
+  
+  'austria': 96,
+  'at': 96,
+  
+  'portugal': 96,
+  'pt': 96,
+  
+  'belgium': 96,
+  'be': 96,
+  
+  'finland': 96,
+  'fi': 96,
+  
+  'ireland': 96,
+  'ie': 96,
+  
+  'luxembourg': 97,
+  'lu': 97,
+  
+  'denmark': 96,
+  'dk': 96,
+  
+  // Durchschnitt
+  'united_states': 95,
+  'usa': 95,
+  'us': 95,
+  
+  'poland': 95,
+  'pl': 95,
+  
+  'czech_republic': 95,
+  'cz': 95,
+  
+  'slovenia': 95,
+  'si': 95,
+  
+  'estonia': 95,
+  'ee': 95,
+  
+  'chile': 95,
+  'cl': 95,
+  
+  'costa_rica': 95,
+  'cr': 95,
+  
+  // Unterdurchschnitt
+  'russia': 92,
+  'ru': 92,
+  
+  'brazil': 94,
+  'br': 94,
+  
+  'mexico': 94,
+  'mx': 94,
+  
+  'argentina': 94,
+  'ar': 94,
+  
+  'china': 95,
+  'cn': 95,
+  
+  'india': 93,
+  'in': 93,
+  
+  'turkey': 94,
+  'tr': 94,
+  
+  'south_africa': 92,
+  'za': 92,
+  
+  // Default
+  'other': 95
+};
+
+// ========================================
+// HELPER FUNCTIONS - BASELINES
 // ========================================
 
 /**
@@ -418,12 +573,43 @@ function calculatePercentile(difference) {
   return Math.round(Math.max(1, Math.min(99, percentile)));
 }
 
+// ========================================
+// HELPER FUNCTIONS - COUNTRY MAXIMUM
+// ========================================
+
 /**
- * Hole alle verfügbaren Länder
+ * Hole Country Maximum für Penalty-Berechnung
+ * @param {string} country - Ländercode (z.B. 'de', 'germany', 'es', 'spain')
+ * @returns {number} Maximum Lebenserwartung für dieses Land
+ */
+export function getCountryMaximum(country) {
+  const normalized = country?.toLowerCase().trim() || 'other';
+  return COUNTRY_MAXIMUM[normalized] || COUNTRY_MAXIMUM['other'];
+}
+
+/**
+ * Hole alle verfügbaren Länder (BASELINES)
  * @returns {Array} Liste der Ländercodes
  */
 export function getAvailableCountries() {
   return Object.keys(BASELINES).filter(k => k !== 'other');
+}
+
+/**
+ * Hole alle verfügbaren Länder (COUNTRY_MAXIMUM)
+ * @returns {Array} Liste der Ländercodes mit Maximums
+ */
+export function getAvailableCountryMaximums() {
+  const countries = Object.keys(COUNTRY_MAXIMUM);
+  // Entferne Duplikate (z.B. 'de' und 'germany')
+  const unique = {};
+  countries.forEach(code => {
+    const max = COUNTRY_MAXIMUM[code];
+    if (!unique[max] || code.length < unique[max].length) {
+      unique[max] = code;
+    }
+  });
+  return Object.values(unique).filter(c => c !== 'other');
 }
 
 /**
@@ -434,34 +620,39 @@ export function getAvailableCountries() {
 export function getCountryMetadata(country) {
   const metadata = {
     de: {
-      name: { de: 'Deutschland', en: 'Germany', es: 'Alemania' },
+      name: { de: 'Deutschland', en: 'Germany', es: 'Alemania', fr: 'Allemagne' },
       dataYear: '2022-2024',
       source: 'Destatis',
-      url: 'https://www.destatis.de/'
+      url: 'https://www.destatis.de/',
+      maximum: COUNTRY_MAXIMUM['de']
     },
     es: {
-      name: { de: 'Spanien', en: 'Spain', es: 'España' },
+      name: { de: 'Spanien', en: 'Spain', es: 'España', fr: 'Espagne' },
       dataYear: '2023',
       source: 'INE',
-      url: 'https://www.ine.es/'
+      url: 'https://www.ine.es/',
+      maximum: COUNTRY_MAXIMUM['es']
     },
     uk: {
-      name: { de: 'Vereinigtes Königreich', en: 'United Kingdom', es: 'Reino Unido' },
+      name: { de: 'Vereinigtes Königreich', en: 'United Kingdom', es: 'Reino Unido', fr: 'Royaume-Uni' },
       dataYear: '2022-2024',
       source: 'ONS',
-      url: 'https://www.ons.gov.uk/'
+      url: 'https://www.ons.gov.uk/',
+      maximum: COUNTRY_MAXIMUM['uk']
     },
     us: {
-      name: { de: 'USA', en: 'USA', es: 'EE.UU.' },
+      name: { de: 'USA', en: 'USA', es: 'EE.UU.', fr: 'États-Unis' },
       dataYear: '2023',
       source: 'CDC NCHS',
-      url: 'https://www.cdc.gov/nchs/'
+      url: 'https://www.cdc.gov/nchs/',
+      maximum: COUNTRY_MAXIMUM['us']
     },
     other: {
-      name: { de: 'Anderes', en: 'Other', es: 'Otro' },
+      name: { de: 'Anderes', en: 'Other', es: 'Otro', fr: 'Autre' },
       dataYear: '~2023',
       source: 'WHO Global Average',
-      url: 'https://www.who.int/'
+      url: 'https://www.who.int/',
+      maximum: COUNTRY_MAXIMUM['other']
     }
   };
   
@@ -478,6 +669,15 @@ export function isValidCountry(country) {
 }
 
 /**
+ * Validiere Country-Code für Maximum
+ * @param {string} country - Ländercode
+ * @returns {boolean} Ist gültig?
+ */
+export function isValidCountryMaximum(country) {
+  return COUNTRY_MAXIMUM.hasOwnProperty(country?.toLowerCase());
+}
+
+/**
  * Validiere Gender
  * @param {string} gender - Geschlecht
  * @returns {boolean} Ist gültig?
@@ -485,6 +685,41 @@ export function isValidCountry(country) {
 export function isValidGender(gender) {
   const normalized = gender?.toLowerCase();
   return ['male', 'female', 'other', 'diverse'].includes(normalized);
+}
+
+/**
+ * Mappe Common Country Names zu Codes
+ * @param {string} countryInput - Länderbezeichnung (z.B. 'Germany', 'deutschland', 'DE')
+ * @returns {string} Normalisierter Ländercode
+ */
+export function normalizeCountryCode(countryInput) {
+  const input = countryInput?.toLowerCase().trim();
+  
+  // Mapping von Namen zu Codes
+  const mapping = {
+    'germany': 'de',
+    'deutschland': 'de',
+    'spain': 'es',
+    'españa': 'es',
+    'spanien': 'es',
+    'united kingdom': 'uk',
+    'vereinigtes königreich': 'uk',
+    'great britain': 'uk',
+    'england': 'uk',
+    'united states': 'us',
+    'usa': 'us',
+    'vereinigte staaten': 'us',
+    'japan': 'jp',
+    'italy': 'it',
+    'italien': 'it',
+    'france': 'fr',
+    'frankreich': 'fr',
+    'switzerland': 'ch',
+    'schweiz': 'ch',
+    // Add more as needed
+  };
+  
+  return mapping[input] || input || 'other';
 }
 
 // ========================================

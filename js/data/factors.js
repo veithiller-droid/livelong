@@ -44,7 +44,7 @@ export const FACTORS = {
       "family_cvd"              // Family history: heart attack/stroke
     ],
     
-    weight: 1.5,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "❤️",
     color: "#e74c3c"
@@ -75,7 +75,7 @@ export const FACTORS = {
       "metab_02"                    // Cholesterol screening compliance
     ],
     
-    weight: 1.4,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "🩸",
     color: "#9b59b6"
@@ -103,7 +103,7 @@ export const FACTORS = {
       "pulmonary_symptom_02"        // Chronic cough
     ],
     
-    weight: 1.3,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "🫁",
     color: "#3498db"
@@ -129,7 +129,7 @@ export const FACTORS = {
       "renal_symptom"           // Edema symptoms
     ],
     
-    weight: 1.3,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "🫘",
     color: "#1abc9c"
@@ -156,7 +156,7 @@ export const FACTORS = {
       "cancer_screening"        // Cancer screening participation
     ],
     
-    weight: 1.5,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "🎗️",
     color: "#e67e22"
@@ -185,7 +185,7 @@ export const FACTORS = {
       "meta_smoking"  // From meta questions - includes IQOS/Vape options
     ],
     
-    weight: 1.6,  // Rauchen ist DER Risikofaktor
+    weight: 1.0,  // Rauchen ist DER Risikofaktor
     baseline_impact: "high",
     icon: "🚬",
     color: "#95a5a6"
@@ -212,7 +212,7 @@ export const FACTORS = {
       "alcohol_03"   // Binge-Drinking
     ],
     
-    weight: 1.2,
+    weight: 1.0,
     baseline_impact: "medium",
     icon: "🍷",
     color: "#c0392b"
@@ -248,7 +248,7 @@ export const FACTORS = {
       "diet_12"    // Ultra-processed
     ],
     
-    weight: 1.3,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "🥗",
     color: "#27ae60"
@@ -274,7 +274,7 @@ export const FACTORS = {
       "fitness_02"   // Sitzen >8h
     ],
     
-    weight: 1.4,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "🏃",
     color: "#f39c12"
@@ -300,7 +300,7 @@ export const FACTORS = {
       "sleep_02"   // Erholsamer Schlaf
     ],
     
-    weight: 1.2,
+    weight: 1.0,
     baseline_impact: "medium",
     icon: "😴",
     color: "#34495e"
@@ -330,7 +330,7 @@ export const FACTORS = {
       "mental_02"   // Angst (GAD-2)
     ],
     
-    weight: 1.3,
+    weight: 1.0,
     baseline_impact: "medium",
     icon: "🧠",
     color: "#8e44ad"
@@ -357,7 +357,7 @@ export const FACTORS = {
       "social_03"   // Partnerschaft/Familie
     ],
     
-    weight: 1.3,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "👥",
     color: "#16a085"
@@ -383,7 +383,7 @@ export const FACTORS = {
       "stress_02"   // Zeit für Entspannung
     ],
     
-    weight: 1.2,
+    weight: 1.0,
     baseline_impact: "medium",
     icon: "😰",
     color: "#e74c3c"
@@ -423,7 +423,7 @@ export const FACTORS = {
       "health_17"    // Pain
     ],
     
-    weight: 1.4,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "🚶",
     color: "#d35400"
@@ -448,7 +448,7 @@ export const FACTORS = {
       "cognitive_01"  // Gedächtnis-/Konzentrationsprobleme
     ],
     
-    weight: 1.3,
+    weight: 1.0,
     baseline_impact: "high",
     icon: "🧩",
     color: "#2c3e50"
@@ -474,7 +474,7 @@ export const FACTORS = {
       "sensory_02"   // Hörprobleme
     ],
     
-    weight: 1.1,
+    weight: 1.0,
     baseline_impact: "medium",
     icon: "👁️",
     color: "#7f8c8d"
@@ -502,10 +502,11 @@ export const FACTORS = {
     items: [
       "prevention_01",  // Zahnkontrolle
       "prevention_02",  // Zahnprobleme
-      "prevention_03"   // Vorsorgeuntersuchungen
+      "prevention_03",   // Vorsorgeuntersuchungen
+      "prevention_04"
     ],
     
-    weight: 1.1,
+    weight: 1.0,
     baseline_impact: "low",
     icon: "🔍",
     color: "#2ecc71"
@@ -527,10 +528,12 @@ export const FACTORS = {
     },
     
     items: [
-      "meds_01"  // 5+ Medikamente
+    "meds_03",  // Anzahl (NEU)
+    "meds_04",  // Klassen (NEU)
+    "meds_05"   // Problematische (NEU)
     ],
     
-    weight: 1.2,
+    weight: 1.0,
     baseline_impact: "medium",
     icon: "💊",
     color: "#e67e22"

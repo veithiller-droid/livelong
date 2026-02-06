@@ -31,6 +31,8 @@ function getText(path) {
   return text[CURRENT_LANG] || text.de || text;
 }
 
+
+
 // ========================================
 // MAIN RENDER FUNCTION
 // ========================================
@@ -71,7 +73,6 @@ export function renderProfile() {
   renderClusterSummary(container, profile);
   renderDetailedFactors(container, profile);
   renderInteractions(container, profile);
-  renderRecommendations(container, profile);
   renderPriorities(container, profile);
   renderInsights(container, profile);
   renderActions(container, profile);
@@ -145,52 +146,59 @@ function renderOverview(container, profile) {
   `;
   title.textContent = getText('profile_page.summary_title') || 'Zusammenfassung';
   
-  const grid = document.createElement('div');
-  grid.style.cssText = `
+const grid = document.createElement('div');
+grid.style.cssText = `
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-bottom: 30px;
-  `;
-  
-  const cards = [
-    {
-      icon: '🎂',
-      label: 'Alter',
-      value: `${profile.overview.age} Jahre`,
-      color: '#3498db'
-    },
-    {
-      icon: '⏳',
-      label: 'Lebenserwartung',
-      value: `${profile.overview.life_expectancy.toFixed(1)} Jahre`,
-      color: profile.overview.is_above_average ? '#2ecc71' : '#e74c3c'
-    },
-    {
-      icon: '📊',
-      label: 'Vergleich',
-      value: `${profile.overview.is_above_average ? '+' : ''}${profile.overview.difference.toFixed(1)} Jahre`,
-      color: profile.overview.is_above_average ? '#2ecc71' : '#e74c3c'
-    },
-    {
-      icon: '🎯',
-      label: 'Percentile',
-      value: `Top ${100 - profile.overview.percentile}%`,
-      color: '#9b59b6'
-    },
-    {
-      icon: '✅',
-      label: 'Konfidenz',
-      value: `${profile.overview.confidence}%`,
-      color: profile.overview.confidence >= 80 ? '#2ecc71' : '#f39c12'
-    },
-    {
-      icon: '⏱️',
-      label: 'Verbleibend',
-      value: `~${profile.overview.years_to_live.toFixed(1)} Jahre`,
-      color: '#16a085'
+    
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
     }
-  ];
+    
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
+`;
+  const cards = [
+  {
+    icon: '🎂',
+    label: getText('profile_page.card_age_label'),
+    value: `${profile.overview.age} ${getText('profile_page.years_unit')}`,
+    color: '#3498db'
+  },
+  {
+    icon: '⏳',
+    label: getText('profile_page.card_life_expectancy_label'),
+    value: `${profile.overview.life_expectancy.toFixed(1)} ${getText('profile_page.years_unit')}`,
+    color: profile.overview.is_above_average ? '#2ecc71' : '#e74c3c'
+  },
+  {
+    icon: '📊',
+    label: getText('profile_page.card_comparison_label'),
+    value: `${profile.overview.is_above_average ? '+' : ''}${profile.overview.difference.toFixed(1)} ${getText('profile_page.years_unit')}`,
+    color: profile.overview.is_above_average ? '#2ecc71' : '#e74c3c'
+  },
+  {
+    icon: '🎯',
+    label: getText('profile_page.card_percentile_label'),
+    value: `${getText('profile_page.top_percentile_prefix')} ${100 - profile.overview.percentile}%`,
+    color: '#9b59b6'
+  },
+  {
+    icon: '✅',
+    label: getText('profile_page.card_confidence_label'),
+    value: `${profile.overview.confidence}%`,
+    color: profile.overview.confidence >= 80 ? '#2ecc71' : '#f39c12'
+  },
+  {
+    icon: '⏱️',
+    label: getText('profile_page.card_remaining_label'),
+    value: `~${profile.overview.years_to_live.toFixed(1)} ${getText('profile_page.years_unit')}`,
+    color: '#16a085'
+  }
+];
   
   cards.forEach(card => {
     const cardEl = createStatCard(card);
@@ -224,14 +232,14 @@ function createStatCard(card) {
     text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
   `;
-  cardEl.addEventListener('mouseenter', () => {
-    cardEl.style.transform = 'translateY(-5px)';
+cardEl.addEventListener('mouseenter', () => {
+    cardEl.style.transform = 'translateY(-5px) rotate(-2deg)';
     cardEl.style.boxShadow = `0 8px 20px ${card.color}40`;
-  });
-  cardEl.addEventListener('mouseleave', () => {
-    cardEl.style.transform = 'translateY(0)';
+});
+cardEl.addEventListener('mouseleave', () => {
+    cardEl.style.transform = 'translateY(0) rotate(0deg)';
     cardEl.style.boxShadow = 'none';
-  });
+});
   
   const icon = document.createElement('div');
   icon.style.cssText = `
@@ -261,6 +269,166 @@ function createStatCard(card) {
   cardEl.appendChild(value);
   
   return cardEl;
+}
+
+
+// ========================================
+// AGE CONTEXT (moved from scoring.js)
+// ========================================
+
+export function getAgeContext(factorId, score, level, age) {
+  if (!age) {
+    return {
+      icon: "📊",
+      title: getText('age_context.title_template').replace('{age}', ''),
+      text: getText('age_context.not_available'),
+      color: "blue"
+    };
+  }
+  
+  // Use same age groups as original scoring.js
+  const ageGroup = age < 40 ? 'young' : age < 65 ? 'middle' : 'old';
+  const title = getText('age_context.title_template').replace('{age}', age);
+  
+  // EXCELLENT (70-100)
+  if (level === 'excellent') {
+    if (ageGroup === 'young') {
+      return {
+        icon: "📊",
+        title: title,
+        text: getText('age_context.excellent_young'),
+        color: "blue"
+      };
+    }
+    if (ageGroup === 'middle') {
+      return {
+        icon: "✅",
+        title: title,
+        text: getText('age_context.excellent_middle'),
+        color: "green"
+      };
+    }
+    return {
+      icon: "🌟",
+      title: title,
+      text: age >= 80 
+        ? getText('age_context.excellent_old_80plus')
+        : getText('age_context.excellent_old'),
+      color: "gold"
+    };
+  }
+  
+  // GOOD (60-69)
+  if (level === 'good') {
+    if (ageGroup === 'young') {
+      return {
+        icon: "📊",
+        title: title,
+        text: getText('age_context.good_young'),
+        color: "blue"
+      };
+    }
+    if (ageGroup === 'middle') {
+      return {
+        icon: "✅",
+        title: title,
+        text: getText('age_context.good_middle'),
+        color: "green"
+      };
+    }
+    return {
+      icon: "✅",
+      title: title,
+      text: getText('age_context.good_old'),
+      color: "green"
+    };
+  }
+  
+  // NEUTRAL (50-59)
+  if (level === 'neutral') {
+    if (ageGroup === 'young') {
+      return {
+        icon: "🔄",
+        title: title,
+        text: getText('age_context.neutral_young'),
+        color: "blue"
+      };
+    }
+    if (ageGroup === 'middle') {
+      return {
+        icon: "🔄",
+        title: title,
+        text: getText('age_context.neutral_middle'),
+        color: "blue"
+      };
+    }
+    return {
+      icon: "🔄",
+      title: title,
+      text: getText('age_context.neutral_old'),
+      color: "blue"
+    };
+  }
+  
+  // MODERATE (35-49)
+  if (level === 'moderate') {
+    if (ageGroup === 'young') {
+      return {
+        icon: "⚠️",
+        title: title,
+        text: getText('age_context.moderate_young'),
+        color: "orange"
+      };
+    }
+    if (ageGroup === 'middle') {
+      return {
+        icon: "⚠️",
+        title: title,
+        text: getText('age_context.moderate_middle'),
+        color: "orange"
+      };
+    }
+    return {
+      icon: "⚠️",
+      title: title,
+      text: getText('age_context.moderate_old'),
+      color: "orange"
+    };
+  }
+  
+  // POOR (0-34)
+  if (level === 'poor') {
+    if (ageGroup === 'young') {
+      return {
+        icon: "🚨",
+        title: title,
+        text: getText('age_context.poor_young'),
+        color: "red"
+      };
+    }
+    if (ageGroup === 'middle') {
+      return {
+        icon: "🚨",
+        title: title,
+        text: getText('age_context.poor_middle'),
+        color: "red"
+      };
+    }
+    return {
+      icon: "🚨",
+      title: title,
+      text: getText('age_context.poor_old'),
+      color: "red"
+    };
+  }
+  
+  // Fallback
+  return {
+    icon: "📊",
+    title: title,
+    text: getText('age_context.not_available'),
+    color: "blue"
+  };
 }
 
 // ========================================
@@ -447,7 +615,7 @@ function createClusterCard(cluster, summary) {
   const level = summary.level;
   const levelColors = {
   excellent: '#27ae60',   // Saftiges Dunkelgrün ✅✅
-  good: '#52c77a',        // Noch helleres Grün ✅ (aufgehellt!)
+  good: '#C8F7E5',        // Noch helleres Grün ✅ (aufgehellt!)
   neutral: '#f1c40f',     // Gelb 😐
   moderate: '#e67e22',    // Orange ⚠️
   poor: '#e74c3c'         // Rot ❌
@@ -501,7 +669,7 @@ function createClusterCard(cluster, summary) {
     font-size: 12px;
     color: #666;
   `;
-  factorCount.textContent = `${summary.factor_count} Faktoren`;
+factorCount.textContent = getText('profile_page.factors_count').replace('{count}', summary.factor_count);
   
   titleDiv.appendChild(name);
   titleDiv.appendChild(factorCount);
@@ -524,7 +692,7 @@ function createClusterCard(cluster, summary) {
   avgScore.style.cssText = 'text-align: center;';
   avgScore.innerHTML = `
     <div style="font-size: 24px; font-weight: bold; color: ${levelColors[level]};">${summary.avg_score}/100</div>
-    <div style="font-size: 12px; color: #666;">Durchschnitt</div>
+    <div style="font-size: 12px; color: #666;">${getText('profile_page.average_label')}</div>
   `;
   
   const impact = document.createElement('div');
@@ -555,10 +723,10 @@ function createClusterCard(cluster, summary) {
   
   worstBest.innerHTML = `
     <div style="margin-bottom: 5px;">
-      ⚠️ Schwächste: <strong>${worstFactor ? worstFactor.label[CURRENT_LANG] : summary.worst_factor.id}</strong> (${summary.worst_factor.score})
+     ⚠️ ${getText('profile_page.weakest_label')} <strong>${worstFactor ? worstFactor.label[CURRENT_LANG] : summary.worst_factor.id}</strong> (${summary.worst_factor.score})
     </div>
     <div>
-      ✅ Stärkste: <strong>${bestFactor ? bestFactor.label[CURRENT_LANG] : summary.best_factor.id}</strong> (${summary.best_factor.score})
+     ✅ ${getText('profile_page.strongest_label')} <strong>${bestFactor ? bestFactor.label[CURRENT_LANG] : summary.best_factor.id}</strong> (${summary.best_factor.score})
     </div>
   `;
   
@@ -709,17 +877,25 @@ function renderClusterFactors(clusterId, cluster, profile) {
 }
 
 function renderFactorCard(factorId, factorData) {
+  // DEBUG - NEU!
+  console.log('=== RENDER FACTOR ===');
+  console.log('factorId:', factorId);
+  console.log('age_context:', factorData.age_context);
+  console.log('====================');
+  
   const factor = FACTORS[factorId];
   if (!factor) return document.createElement('div');
   
   const level = factorData.level;
- const levelColors = {
-  excellent: '#27ae60',   // Saftiges Dunkelgrün ✅✅
-  good: '#52c77a',        // Noch helleres Grün ✅ (aufgehellt!)
-  neutral: '#f1c40f',     // Gelb 😐
-  moderate: '#e67e22',    // Orange ⚠️
-  poor: '#e74c3c'         // Rot ❌
-};
+  const levelColors = {
+    excellent: '#27ae60',
+    good: '#A8E6CF',
+    neutral: '#f1c40f',
+    moderate: '#e67e22',
+    poor: '#e74c3c'
+  };
+  
+  // ... rest bleibt gleich
   
   const card = document.createElement('div');
   card.className = `factor-card factor-${factorId}`;
@@ -829,6 +1005,70 @@ function renderFactorCard(factorId, factorData) {
     line-height: 1.6;
   `;
   interpretation.textContent = factorData.interpretation[CURRENT_LANG];
+
+  // NEU: Age Context Box
+let ageContextDiv = null;
+if (factorData.age_context) {
+  ageContextDiv = document.createElement('div');
+  
+  // Bestimme Farbe basierend auf context color
+  const contextColors = {
+    blue: { bg: '#f0f7ff', border: '#0066cc' },
+    green: { bg: '#f0fff4', border: '#22c55e' },
+    gold: { bg: '#fffbeb', border: '#f59e0b' },
+    orange: { bg: '#fff5f0', border: '#f97316' },
+    red: { bg: '#fff1f0', border: '#ef4444' }
+  };
+  
+  const colors = contextColors[factorData.age_context.color] || contextColors.blue;
+  
+  ageContextDiv.style.cssText = `
+    margin: 16px 0;
+    padding: 14px 16px;
+    background: ${colors.bg};
+    border-left: 4px solid ${colors.border};
+    border-radius: 8px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  `;
+  
+  const ageIcon = document.createElement('div');
+  ageIcon.style.cssText = `
+    font-size: 26px;
+    line-height: 1;
+    flex-shrink: 0;
+  `;
+  ageIcon.textContent = factorData.age_context.icon;
+  
+  const ageContent = document.createElement('div');
+  ageContent.style.cssText = `
+    flex: 1;
+  `;
+  
+  const ageTitle = document.createElement('div');
+  ageTitle.style.cssText = `
+    font-weight: 600;
+    font-size: 14px;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+  `;
+  ageTitle.textContent = factorData.age_context.title;
+  
+  const ageText = document.createElement('div');
+  ageText.style.cssText = `
+    font-size: 14px;
+    color: #4a5568;
+    line-height: 1.6;
+  `;
+  ageText.textContent = factorData.age_context.text;
+  
+  ageContent.appendChild(ageTitle);
+  ageContent.appendChild(ageText);
+  
+  ageContextDiv.appendChild(ageIcon);
+  ageContextDiv.appendChild(ageContent);
+}
   
   const coverage = document.createElement('div');
   coverage.style.cssText = `
@@ -845,15 +1085,24 @@ function renderFactorCard(factorId, factorData) {
   card.appendChild(scoreSection);
   card.appendChild(interpretation);
   
-  if (factorData.actionable_items && factorData.actionable_items.length > 0) {
+
+  if (ageContextDiv) {
+  card.appendChild(ageContextDiv);
+}
+  
+// Nur actionable items zeigen wenn Score < 100 UND Impact < -2 (echtes Verbesserungspotential)
+if (factorData.actionable_items && 
+    factorData.actionable_items.length > 0 && 
+    factorData.score < 100 && 
+    factorData.impact < -2) {
     const actions = renderActionableItems(factorData.actionable_items);
     card.appendChild(actions);
-  }
+}
   
-  if (factorData.medical_context) {
+if (factorData.medical_context) {
     const medContext = renderMedicalContext(factorData.medical_context);
     card.appendChild(medContext);
-  }
+}
   
   card.appendChild(coverage);
   
@@ -1250,294 +1499,7 @@ function renderInteractionList(title, interactions, type) {
   return container;
 }
 
-// ========================================
-// RECOMMENDATIONS
-// ========================================
 
-function renderRecommendations(container, profile) {
-  if (!profile.recommendations || profile.recommendations.length === 0) {
-    return;
-  }
-  
-  const section = document.createElement('div');
-  section.className = 'recommendations-section';
-  section.style.cssText = `
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-  `;
-  
-  const title = document.createElement('h2');
-  title.style.cssText = `
-    margin: 0 0 20px 0;
-    font-size: 28px;
-  `;
-  title.textContent = getText('profile_page.recommendations_title') || 'Deine personalisierten Empfehlungen';
-  
-  const subtitle = document.createElement('p');
-  subtitle.style.cssText = `
-    color: #666;
-    font-size: 16px;
-    margin-bottom: 30px;
-  `;
-  subtitle.textContent = getText('profile_page.recommendations_subtitle') || 'Priorisiert nach Wichtigkeit und Umsetzbarkeit';
-  
-  section.appendChild(title);
-  section.appendChild(subtitle);
-  
-  profile.recommendations.forEach((rec, index) => {
-    const recCard = renderRecommendationCard(rec, index + 1);
-    section.appendChild(recCard);
-  });
-  
-  container.appendChild(section);
-}
-
-function renderRecommendationCard(rec, priority) {
-  const priorityColors = {
-    critical: '#e74c3c',
-    high: '#e67e22',
-    medium: '#f39c12',
-    low: '#3498db'
-  };
-  
-  const difficultyIcons = {
-    easy: '😊',
-    moderate: '🤔',
-    hard: '💪',
-    very_hard: '🏔️'
-  };
-  
-  const card = document.createElement('div');
-  card.style.cssText = `
-    background: white;
-    border: 3px solid ${priorityColors[rec.priority]};
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 20px;
-  `;
-  
-  const header = document.createElement('div');
-  header.style.cssText = `
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 15px;
-  `;
-  
-  const titleDiv = document.createElement('div');
-  titleDiv.style.cssText = 'flex: 1;';
-  
-  const priorityBadge = document.createElement('div');
-  priorityBadge.style.cssText = `
-    background: ${priorityColors[rec.priority]};
-    color: white;
-    padding: 5px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    display: inline-block;
-  `;
-  priorityBadge.textContent = `PRIORITÄT ${priority}`;
-  
-  const title = document.createElement('h3');
-  title.style.cssText = `
-    margin: 10px 0 5px 0;
-    font-size: 22px;
-  `;
-  title.textContent = rec.title[CURRENT_LANG];
-  
-  const gain = document.createElement('div');
-  gain.style.cssText = `
-    font-size: 24px;
-    font-weight: bold;
-    color: #2ecc71;
-    text-align: right;
-  `;
-  gain.textContent = `+${rec.potential_gain.toFixed(1)} Jahre`;
-  
-  titleDiv.appendChild(priorityBadge);
-  titleDiv.appendChild(title);
-  header.appendChild(titleDiv);
-  header.appendChild(gain);
-  
-  const description = document.createElement('p');
-  description.style.cssText = `
-    font-size: 15px;
-    line-height: 1.6;
-    margin: 15px 0;
-    color: #34495e;
-  `;
-  description.textContent = rec.description[CURRENT_LANG];
-  
-  const meta = document.createElement('div');
-  meta.style.cssText = `
-    display: flex;
-    gap: 15px;
-    margin: 15px 0;
-    font-size: 14px;
-  `;
-  
-  const difficulty = document.createElement('div');
-  difficulty.innerHTML = `
-    <strong>Schwierigkeit:</strong> 
-    ${difficultyIcons[rec.difficulty]} 
-    ${getText(`profile_page.difficulty_labels.${rec.difficulty}`) || rec.difficulty}
-  `;
-  
-  const timeframe = document.createElement('div');
-  timeframe.innerHTML = `
-    <strong>Zeitrahmen:</strong> ${rec.timeframe}
-  `;
-  
-  meta.appendChild(difficulty);
-  meta.appendChild(timeframe);
-  
-  const whyMatters = document.createElement('div');
-  whyMatters.style.cssText = `
-    background: #e8f4f8;
-    padding: 15px;
-    border-radius: 8px;
-    margin: 15px 0;
-  `;
-  
-  const whyTitle = document.createElement('div');
-  whyTitle.style.cssText = `
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #2c3e50;
-  `;
-  whyTitle.textContent = `💡 ${getText('profile_page.why_important')}`;
-  
-  const whyList = document.createElement('ul');
-  whyList.style.cssText = `
-    margin: 0;
-    padding-left: 20px;
-    font-size: 14px;
-  `;
-  
-  rec.why_it_matters[CURRENT_LANG].forEach(point => {
-    const li = document.createElement('li');
-    li.style.marginBottom = '5px';
-    li.textContent = point;
-    whyList.appendChild(li);
-  });
-  
-  whyMatters.appendChild(whyTitle);
-  whyMatters.appendChild(whyList);
-  
-  const actionSteps = document.createElement('div');
-  actionSteps.style.cssText = `
-    background: #f0fff4;
-    padding: 15px;
-    border-radius: 8px;
-    margin: 15px 0;
-  `;
-  
-  const actionTitle = document.createElement('div');
-  actionTitle.style.cssText = `
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #2c3e50;
-  `;
-  actionTitle.textContent = `📋 ${getText('profile_page.concrete_steps')}`;
-  
-  const actionList = document.createElement('ol');
-  actionList.style.cssText = `
-    margin: 0;
-    padding-left: 20px;
-    font-size: 14px;
-  `;
-  
-  rec.action_steps[CURRENT_LANG].forEach(step => {
-    const li = document.createElement('li');
-    li.style.marginBottom = '8px';
-    li.textContent = step;
-    actionList.appendChild(li);
-  });
-  
-  actionSteps.appendChild(actionTitle);
-  actionSteps.appendChild(actionList);
-  
-  const expandButton = document.createElement('button');
-  expandButton.style.cssText = `
-    width: 100%;
-    padding: 12px;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-top: 15px;
-    transition: background 0.2s;
-  `;
-  expandButton.textContent = `📖 ${getText('profile_page.details_show_more')}`;
-  
-  const detailsDiv = document.createElement('div');
-  detailsDiv.style.cssText = `
-    display: none;
-    margin-top: 15px;
-  `;
-  
-  if (rec.implementation_timeline) {
-    const timeline = renderTimeline(rec.implementation_timeline[CURRENT_LANG]);
-    detailsDiv.appendChild(timeline);
-  }
-  
-  if (rec.success_metrics) {
-    const metrics = renderMetrics(rec.success_metrics[CURRENT_LANG]);
-    detailsDiv.appendChild(metrics);
-  }
-  
-  if (rec.barriers) {
-    const barriers = renderBarriers(rec.barriers[CURRENT_LANG]);
-    detailsDiv.appendChild(barriers);
-  }
-  
-  if (rec.support_resources) {
-    const resources = renderResources(rec.support_resources[CURRENT_LANG]);
-    detailsDiv.appendChild(resources);
-  }
-  
-  let expanded = false;
-  expandButton.addEventListener('click', () => {
-    expanded = !expanded;
-    detailsDiv.style.display = expanded ? 'block' : 'none';
-    expandButton.textContent = expanded ? `📖 ${getText('profile_page.details_hide')}` : `📖 ${getText('profile_page.details_show_more')}`;
-  });
-  
-  expandButton.addEventListener('mouseenter', () => {
-    expandButton.style.background = '#e9ecef';
-  });
-  expandButton.addEventListener('mouseleave', () => {
-    expandButton.style.background = '#f8f9fa';
-  });
-  
-  const scientific = document.createElement('div');
-  scientific.style.cssText = `
-    margin-top: 15px;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    font-size: 12px;
-    color: #666;
-  `;
-  scientific.innerHTML = `<strong>📚 ${getText('profile_page.scientific_basis')}:</strong> ${rec.scientific_basis[CURRENT_LANG]}`;
-  
-  card.appendChild(header);
-  card.appendChild(description);
-  card.appendChild(meta);
-  card.appendChild(whyMatters);
-  card.appendChild(actionSteps);
-  card.appendChild(expandButton);
-  card.appendChild(detailsDiv);
-  card.appendChild(scientific);
-  
-  return card;
-}
 
 function renderTimeline(timeline) {
   const container = document.createElement('div');
@@ -1705,30 +1667,42 @@ function renderPriorities(container, profile) {
   `;
   
   const title = document.createElement('h2');
-  title.style.cssText = `
-    margin: 0 0 30px 0;
-    font-size: 28px;
-  `;
-  title.textContent = getText('profile_page.next_steps_title') || 'Deine Handlungsprioritäten';
-  
-  section.appendChild(title);
-  
-  if (profile.priorities.critical && profile.priorities.critical.length > 0) {
-    const critical = renderPrioritySection('🚨 KRITISCH - Sofort handeln', profile.priorities.critical, '#e74c3c');
-    section.appendChild(critical);
-  }
-  
-  if (profile.priorities.high_impact && profile.priorities.high_impact.length > 0) {
-    const highImpact = renderPrioritySection('⚡ Hoher Impact - Große Hebelwirkung', profile.priorities.high_impact, '#e67e22');
-    section.appendChild(highImpact);
-  }
-  
-  if (profile.priorities.quick_wins && profile.priorities.quick_wins.length > 0) {
-    const quickWins = renderPrioritySection('🎯 Quick Wins - Leicht umzusetzen', profile.priorities.quick_wins, '#2ecc71');
-    section.appendChild(quickWins);
-  }
-  
-  container.appendChild(section);
+title.style.cssText = `
+  margin: 0 0 30px 0;
+  font-size: 28px;
+`;
+title.textContent = getText('profile_page.next_steps_title') || 'Deine Handlungsprioritäten';
+
+section.appendChild(title);
+
+if (profile.priorities.critical && profile.priorities.critical.length > 0) {
+  const critical = renderPrioritySection(
+    `🚨 ${getText('profile_page.critical_immediate')}`, 
+    profile.priorities.critical, 
+    '#e74c3c'
+  );
+  section.appendChild(critical);
+}
+
+if (profile.priorities.high_impact && profile.priorities.high_impact.length > 0) {
+  const highImpact = renderPrioritySection(
+    `⚡ ${getText('profile_page.high_impact')}`, 
+    profile.priorities.high_impact, 
+    '#e67e22'
+  );
+  section.appendChild(highImpact);
+}
+
+if (profile.priorities.quick_wins && profile.priorities.quick_wins.length > 0) {
+  const quickWins = renderPrioritySection(
+    `🎯 ${getText('profile_page.quick_wins')}`, 
+    profile.priorities.quick_wins, 
+    '#2ecc71'
+  );
+  section.appendChild(quickWins);
+}
+
+container.appendChild(section);
 }
 
 function renderPrioritySection(title, items, color) {
@@ -1787,19 +1761,26 @@ function renderPrioritySection(title, items, color) {
     }
     
     if (item.impact !== undefined) {
-      details.innerHTML += `Impact: <strong style="color: ${item.impact >= 0 ? '#2ecc71' : '#e74c3c'};">
-        ${item.impact >= 0 ? '+' : ''}${item.impact.toFixed(1)} Jahre
+      const impactText = getText('profile_page.impact_years').replace('{value}', 
+        `${item.impact >= 0 ? '+' : ''}${item.impact.toFixed(1)}`
+      );
+      details.innerHTML += `<strong style="color: ${item.impact >= 0 ? '#2ecc71' : '#e74c3c'};">
+        ${impactText}
       </strong> | `;
     }
     
     if (item.potential_gain !== undefined) {
-      details.innerHTML += `Möglicher Gewinn: <strong style="color: #2ecc71;">
-        +${item.potential_gain.toFixed(1)} Jahre
+      const gainText = getText('profile_page.possible_gain_years').replace('{value}', 
+        item.potential_gain.toFixed(1)
+      );
+      details.innerHTML += `<strong style="color: #2ecc71;">
+        ${gainText}
       </strong>`;
     }
     
     if (item.timeframe) {
-      details.innerHTML += ` | Zeitrahmen: <strong>${item.timeframe}</strong>`;
+      const timeframeLabel = getText('profile_page.timeframe_label') || 'Zeitrahmen';
+      details.innerHTML += ` | ${timeframeLabel}: <strong>${item.timeframe}</strong>`;
     }
     
     info.appendChild(name);
@@ -1817,7 +1798,7 @@ function renderPrioritySection(title, items, color) {
       white-space: nowrap;
       transition: opacity 0.2s;
     `;
-    actionButton.textContent = `${getText('profile_page.details_show')} →`;
+    actionButton.textContent = getText('profile_page.show_details');
     actionButton.addEventListener('mouseenter', () => {
       actionButton.style.opacity = '0.8';
     });
@@ -1954,57 +1935,85 @@ function renderActions(container, profile) {
   const section = document.createElement('div');
   section.className = 'actions-section';
   section.style.cssText = `
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
     color: white;
-    padding: 40px;
-    border-radius: 12px;
+    padding: 50px 40px;
+    border-radius: 16px;
     margin-bottom: 30px;
     text-align: center;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
   `;
+  
+  // Animated sparkle overlay
+  const sparkle = document.createElement('div');
+  sparkle.style.cssText = `
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    animation: sparkle-move 6s ease-in-out infinite;
+    pointer-events: none;
+  `;
+  section.appendChild(sparkle);
   
   const title = document.createElement('h2');
   title.style.cssText = `
-    margin: 0 0 30px 0;
-    font-size: 28px;
+    margin: 0 0 40px 0;
+    font-size: 36px;
+    font-weight: 800;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
   `;
-  title.textContent = 'Was möchtest du als Nächstes tun?';
+  title.textContent = '✨ Was möchtest du als Nächstes tun?';
   
   const buttons = document.createElement('div');
   buttons.style.cssText = `
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    position: relative;
+    z-index: 1;
   `;
   
   const actionButtons = [
-    {
-      text: getText('common.what_if_simulator'),
-      description: getText('profile_page.simulate_changes') || 'Simuliere Änderungen',
-      href: 'what-if.html',
-      color: '#3498db'
-    },
-    {
-      text: getText('common.methodology'),
-      description: getText('profile_page.scientific_basis') || 'Wissenschaftliche Basis',
-      href: 'methodology.html',
-      color: '#9b59b6'
-    },
-    {
-      text: getText('profile_page.pdf_download') || '📄 PDF Download',
-      description: getText('profile_page.download_report') || 'Report herunterladen',
-      onClick: () => downloadPDF(),
-      color: '#e67e22'
-    },
-    {
-      text: '🔄 Test wiederholen',
-      description: 'Neustart',
-      onClick: () => {
-        if (confirm('Wirklich von vorne beginnen?')) {
-          window.location.href = 'meta.html';
-        }
-      },
-      color: '#95a5a6'
-    }
+  {
+    text: getText('profile_page.action_recommendations_title'),
+    description: getText('profile_page.action_recommendations_desc'),
+    href: 'recommendations.html',
+    color: '#27ae60',
+    special: true,
+    icon: '🎯'
+  },
+  {
+    text: `🔮 ${getText('profile_page.what_if_simulator')}`,
+    description: getText('profile_page.simulate_changes'),
+    href: 'what-if.html',
+    color: '#3498db',
+    icon: '✨'
+  },
+  {
+    text: `🔬 ${getText('profile_page.methodology')}`,
+    description: getText('profile_page.scientific_basis_link'),
+    href: 'methodology.html',
+    color: '#9b59b6',
+    icon: '📚'
+  },
+  {
+    text: `📄 ${getText('profile_page.pdf_download')}`,
+    description: getText('profile_page.download_report'),
+    onClick: () => downloadPDF(),
+    color: '#e67e22',
+    icon: '💾'
+  },
+
   ];
   
   actionButtons.forEach(btn => {
@@ -2026,49 +2035,116 @@ function createActionButtonPaid(config) {
     button.addEventListener('click', config.onClick);
   }
   
-  button.style.cssText = `
+  // Special style for recommendations button
+  const isSpecial = config.special === true;
+  
+ button.style.cssText = `
     display: block;
-    background: ${config.color};
+    background: ${isSpecial ? `linear-gradient(135deg, ${config.color} 0%, #1e8449 100%)` : `linear-gradient(135deg, ${config.color} 0%, ${adjustColor(config.color, -20)} 100%)`};
     color: white;
-    padding: 25px 20px;
-    border-radius: 12px;
+    padding: ${isSpecial ? '35px 30px' : '30px 25px'};
+    border-radius: 16px;
     text-decoration: none;
-    border: none;
+    border: ${isSpecial ? '3px solid rgba(255,255,255,0.4)' : '2px solid rgba(255,255,255,0.2)'};
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: ${isSpecial ? '0 10px 30px rgba(39, 174, 96, 0.5)' : '0 6px 20px rgba(0,0,0,0.2)'};
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
   `;
   
+  // Shimmer effect overlay
+  const shimmer = document.createElement('div');
+  shimmer.style.cssText = `
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 70%
+    );
+    animation: shimmer 3s infinite;
+    pointer-events: none;
+  `;
+  button.appendChild(shimmer);
+  
+  // Animation for special button
+  if (isSpecial) {
+    button.style.animation = 'pulse-glow 2s ease-in-out infinite';
+  }
+  
   button.addEventListener('mouseenter', () => {
-    button.style.transform = 'translateY(-5px)';
-    button.style.boxShadow = '0 8px 20px rgba(0,0,0,0.3)';
+    button.style.transform = 'translateY(-8px) scale(1.03) rotate(-1deg)';
+    button.style.boxShadow = isSpecial 
+      ? '0 15px 40px rgba(39, 174, 96, 0.7)' 
+      : '0 12px 30px rgba(0,0,0,0.4)';
   });
   
   button.addEventListener('mouseleave', () => {
-    button.style.transform = 'translateY(0)';
-    button.style.boxShadow = 'none';
+    button.style.transform = 'translateY(0) scale(1) rotate(0deg)';
+    button.style.boxShadow = isSpecial 
+      ? '0 10px 30px rgba(39, 174, 96, 0.5)' 
+      : '0 6px 20px rgba(0,0,0,0.2)';
   });
+  
+  const iconDiv = document.createElement('div');
+  iconDiv.style.cssText = `
+    font-size: ${isSpecial ? '48px' : '40px'};
+    margin-bottom: 12px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    position: relative;
+    z-index: 1;
+  `;
+  iconDiv.textContent = config.icon || '✨';
   
   const text = document.createElement('div');
   text.style.cssText = `
-    font-size: 20px;
+    font-size: ${isSpecial ? '22px' : '18px'};
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
   `;
   text.textContent = config.text;
   
   const description = document.createElement('div');
   description.style.cssText = `
-    font-size: 14px;
-    opacity: 0.9;
+    font-size: ${isSpecial ? '15px' : '13px'};
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
   `;
   description.textContent = config.description;
   
+  button.appendChild(iconDiv);
   button.appendChild(text);
   button.appendChild(description);
   
   return button;
 }
+
+
+  // Helper function to darken color
+function adjustColor(color, amount) {
+  const num = parseInt(color.replace('#', ''), 16);
+  const r = Math.max(0, Math.min(255, (num >> 16) + amount));
+  const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amount));
+  const b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
+  return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+}
+
+  
+
 
 // ========================================
 // HELPER FUNCTIONS
@@ -2131,9 +2207,34 @@ if (typeof window !== 'undefined') {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
     }
+    
+    @keyframes pulse-glow {
+      0%, 100% { 
+        box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4); 
+      }
+      50% { 
+        box-shadow: 0 12px 35px rgba(39, 174, 96, 0.7); 
+      }
+    }
+    
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes sparkle-move {
+      0%, 100% { opacity: 0.3; transform: translate(0, 0); }
+      50% { opacity: 0.6; transform: translate(10px, -10px); }
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
   `;
   document.head.appendChild(style);
 }
+
 
 // ========================================
 // EXPORT

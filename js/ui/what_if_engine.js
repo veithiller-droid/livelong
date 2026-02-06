@@ -1,7 +1,7 @@
 // ui/what_if_engine.js
 // What-If Simulator für Dr. Livelong
 // PAID ONLY - Simuliere Lifestyle-Änderungen und sehe sofort den Impact
-// Version 1.0.0
+// Version 1.2.0 - WITH AGE ADJUSTMENT + MULTILINGUAL
 
 import { STATE, getCalculation, getAllMetaAnswers, getAllAnswers } from '../core/state.js';
 import { calculateLifeExpectancy, simulateChange } from '../core/scoring.js';
@@ -193,7 +193,7 @@ function renderScenarioBuilder(container) {
   
   const scenarioCategories = [
     {
-      name: 'Rauchen',
+      name: getText('what_if_page.category_smoking'),
       icon: '🚬',
       color: '#e74c3c',
       scenarios: [
@@ -202,7 +202,7 @@ function renderScenarioBuilder(container) {
       ]
     },
     {
-      name: 'Gewicht',
+      name: getText('what_if_page.category_weight'),
       icon: '⚖️',
       color: '#9b59b6',
       scenarios: [
@@ -211,7 +211,7 @@ function renderScenarioBuilder(container) {
       ]
     },
     {
-      name: 'Bewegung',
+      name: getText('what_if_page.category_exercise'),
       icon: '🏃',
       color: '#3498db',
       scenarios: [
@@ -219,7 +219,7 @@ function renderScenarioBuilder(container) {
       ]
     },
     {
-      name: 'Ernährung',
+      name: getText('what_if_page.category_diet'),
       icon: '🥗',
       color: '#2ecc71',
       scenarios: [
@@ -227,7 +227,7 @@ function renderScenarioBuilder(container) {
       ]
     },
     {
-      name: 'Alkohol',
+      name: getText('what_if_page.category_alcohol'),
       icon: '🍷',
       color: '#e67e22',
       scenarios: [
@@ -236,7 +236,7 @@ function renderScenarioBuilder(container) {
       ]
     },
     {
-      name: 'Schlaf',
+      name: getText('what_if_page.category_sleep'),
       icon: '😴',
       color: '#34495e',
       scenarios: [
@@ -244,7 +244,7 @@ function renderScenarioBuilder(container) {
       ]
     },
     {
-      name: 'Stress',
+      name: getText('what_if_page.category_stress'),
       icon: '😰',
       color: '#c0392b',
       scenarios: [
@@ -252,7 +252,7 @@ function renderScenarioBuilder(container) {
       ]
     },
     {
-      name: 'Soziales',
+      name: getText('what_if_page.category_social'),
       icon: '👥',
       color: '#16a085',
       scenarios: [
@@ -520,7 +520,7 @@ function updateSelectedScenarios() {
   if (!container) return;
   
   renderSelectedScenarios(container);
-  renderCalculateButton(container);  // ADD THIS LINE!
+  renderCalculateButton(container);
   
   const resultsSection = container.querySelector('.results-section');
   if (resultsSection) {
@@ -636,9 +636,28 @@ async function calculateSimulation() {
   const answers = getAllAnswers();
   
   const changes = buildChanges(currentScenarios, meta, answers);
-  
+
+  // DEBUG: Was wird gebaut?
+  console.log('=== WHAT-IF DEBUG ===');
+  console.log('Selected scenarios:', currentScenarios);
+  console.log('Built changes:', changes);
+  console.log('Current meta:', meta);
+  console.log('Current answers:', answers);
+
   try {
     simulatedResult = simulateChange(meta, answers, changes);
+    
+    // DEBUG: Was kommt raus?
+    console.log('Simulation result:', simulatedResult);
+    console.log('Original:', simulatedResult.original);
+    console.log('Theoretical Modified:', simulatedResult.theoretical_modified);
+    console.log('Realistic Modified:', simulatedResult.realistic_modified);
+    console.log('Theoretical Difference:', simulatedResult.theoretical_difference);
+    console.log('Realistic Difference:', simulatedResult.realistic_difference);
+    console.log('Age Adjustment:', simulatedResult.age_adjustment_factor);
+    console.log('Damage Adjustment:', simulatedResult.damage_adjustment_factor);
+    console.log('Individual changes:', simulatedResult.changes);
+    console.log('====================');
     
     if (button) {
       button.disabled = false;
@@ -655,7 +674,7 @@ async function calculateSimulation() {
     
   } catch (error) {
     console.error('Simulation error:', error);
-    alert('Fehler bei der Berechnung. Bitte versuche es erneut.');
+    alert(getText('what_if_page.error_calculation'));
     
     if (button) {
       button.disabled = false;
@@ -675,7 +694,8 @@ function buildChanges(scenarios, meta, answers) {
           type: 'meta',
           key: 'meta_smoking',
           new_value: 'never',
-          description: 'Mit dem Rauchen aufhören'
+          description: getText('what_if_page.scenario_label_quit_smoking'),
+          scenario_id: 'quit_smoking'
         });
         break;
         
@@ -686,14 +706,16 @@ function buildChanges(scenarios, meta, answers) {
             type: 'meta',
             key: 'meta_smoking',
             new_value: currentSmoking.includes('iqos') ? 'iqos_light' : 'current_light',
-            description: 'Rauchen reduzieren'
+            description: getText('what_if_page.scenario_label_reduce_smoking'),
+            scenario_id: 'reduce_smoking'
           });
         } else if (currentSmoking === 'current_moderate' || currentSmoking === 'iqos_moderate') {
           changes.push({
             type: 'meta',
             key: 'meta_smoking',
             new_value: currentSmoking.includes('iqos') ? 'iqos_light' : 'current_light',
-            description: 'Rauchen reduzieren'
+            description: getText('what_if_page.scenario_label_reduce_smoking'),
+            scenario_id: 'reduce_smoking'
           });
         }
         break;
@@ -704,7 +726,8 @@ function buildChanges(scenarios, meta, answers) {
             type: 'meta',
             key: 'meta_weight',
             new_value: meta.meta_weight - 5,
-            description: '5 kg abnehmen'
+            description: getText('what_if_page.scenario_label_lose_weight_5'),
+            scenario_id: 'lose_weight_5'
           });
         }
         break;
@@ -715,69 +738,107 @@ function buildChanges(scenarios, meta, answers) {
             type: 'meta',
             key: 'meta_weight',
             new_value: meta.meta_weight - 10,
-            description: '10 kg abnehmen'
+            description: getText('what_if_page.scenario_label_lose_weight_10'),
+            scenario_id: 'lose_weight_10'
           });
         }
         break;
         
       case 'start_exercise':
-        changes.push({
-          type: 'answer',
-          question_id: 'fitness_01',
-          new_value: true,
-          description: 'Mit Sport beginnen'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'fitness_02',
-          new_value: false,
-          description: 'Weniger sitzen'
-        });
+        if (!answers.fitness_01) {
+          changes.push({
+            type: 'answer',
+            question_id: 'fitness_01',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_start_exercise'),
+            scenario_id: 'start_exercise'
+          });
+        }
+        if (answers.fitness_02) {
+          changes.push({
+            type: 'answer',
+            question_id: 'fitness_02',
+            new_value: false,
+            description: getText('what_if_page.scenario_label_start_exercise'),
+            scenario_id: 'start_exercise'
+          });
+        }
         break;
         
       case 'improve_diet':
-        changes.push({
-          type: 'answer',
-          question_id: 'diet_01',
-          new_value: true,
-          description: 'Olivenöl nutzen'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'diet_03',
-          new_value: true,
-          description: 'Mehr Gemüse'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'diet_04',
-          new_value: true,
-          description: 'Mehr Obst'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'diet_07',
-          new_value: true,
-          description: 'Mehr Fisch'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'diet_08',
-          new_value: true,
-          description: 'Täglich Nüsse'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'diet_09',
-          new_value: false,
-          description: 'Weniger verarbeitetes Fleisch'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'diet_11',
-          new_value: false,
-          description: 'Keine Zuckergetränke'
-        });
+        const dietChanges = [];
+        
+        if (!answers.diet_01) {
+          dietChanges.push({
+            type: 'answer',
+            question_id: 'diet_01',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_improve_diet'),
+            scenario_id: 'improve_diet'
+          });
+        }
+        
+        if (!answers.diet_03) {
+          dietChanges.push({
+            type: 'answer',
+            question_id: 'diet_03',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_improve_diet'),
+            scenario_id: 'improve_diet'
+          });
+        }
+        
+        if (!answers.diet_04) {
+          dietChanges.push({
+            type: 'answer',
+            question_id: 'diet_04',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_improve_diet'),
+            scenario_id: 'improve_diet'
+          });
+        }
+        
+        if (!answers.diet_07) {
+          dietChanges.push({
+            type: 'answer',
+            question_id: 'diet_07',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_improve_diet'),
+            scenario_id: 'improve_diet'
+          });
+        }
+        
+        if (!answers.diet_08) {
+          dietChanges.push({
+            type: 'answer',
+            question_id: 'diet_08',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_improve_diet'),
+            scenario_id: 'improve_diet'
+          });
+        }
+        
+        if (answers.diet_09) {
+          dietChanges.push({
+            type: 'answer',
+            question_id: 'diet_09',
+            new_value: false,
+            description: getText('what_if_page.scenario_label_improve_diet'),
+            scenario_id: 'improve_diet'
+          });
+        }
+        
+        if (answers.diet_11) {
+          dietChanges.push({
+            type: 'answer',
+            question_id: 'diet_11',
+            new_value: false,
+            description: getText('what_if_page.scenario_label_improve_diet'),
+            scenario_id: 'improve_diet'
+          });
+        }
+        
+        changes.push(...dietChanges);
         break;
         
       case 'reduce_alcohol':
@@ -786,86 +847,140 @@ function buildChanges(scenarios, meta, answers) {
             type: 'answer',
             question_id: 'alcohol_02',
             new_value: 'one',
-            description: 'Alkohol reduzieren'
+            description: getText('what_if_page.scenario_label_reduce_alcohol'),
+            scenario_id: 'reduce_alcohol'
           });
         }
-        changes.push({
-          type: 'answer',
-          question_id: 'alcohol_03',
-          new_value: 'no',
-          description: 'Kein Binge-Drinking'
-        });
+        if (answers.alcohol_03 === 'yes') {
+          changes.push({
+            type: 'answer',
+            question_id: 'alcohol_03',
+            new_value: 'no',
+            description: getText('what_if_page.scenario_label_reduce_alcohol'),
+            scenario_id: 'reduce_alcohol'
+          });
+        }
         break;
         
       case 'quit_alcohol':
-        changes.push({
-          type: 'answer',
-          question_id: 'alcohol_01',
-          new_value: 'never',
-          description: 'Kein Alkohol'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'alcohol_02',
-          new_value: 'none',
-          description: 'Keine Drinks'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'alcohol_03',
-          new_value: 'no_alcohol',
-          description: 'Kein Alkohol'
-        });
+        if (answers.alcohol_01 !== 'never') {
+          changes.push({
+            type: 'answer',
+            question_id: 'alcohol_01',
+            new_value: 'never',
+            description: getText('what_if_page.scenario_label_quit_alcohol'),
+            scenario_id: 'quit_alcohol'
+          });
+        }
+        if (answers.alcohol_02 !== 'none') {
+          changes.push({
+            type: 'answer',
+            question_id: 'alcohol_02',
+            new_value: 'none',
+            description: getText('what_if_page.scenario_label_quit_alcohol'),
+            scenario_id: 'quit_alcohol'
+          });
+        }
+        if (answers.alcohol_03 !== 'no_alcohol') {
+          changes.push({
+            type: 'answer',
+            question_id: 'alcohol_03',
+            new_value: 'no_alcohol',
+            description: getText('what_if_page.scenario_label_quit_alcohol'),
+            scenario_id: 'quit_alcohol'
+          });
+        }
         break;
         
       case 'improve_sleep':
-        changes.push({
-          type: 'answer',
-          question_id: 'sleep_01',
-          new_value: true,
-          description: '7-8h Schlaf'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'sleep_02',
-          new_value: true,
-          description: 'Erholsamer Schlaf'
-        });
+        if (!answers.sleep_01) {
+          changes.push({
+            type: 'answer',
+            question_id: 'sleep_01',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_improve_sleep'),
+            scenario_id: 'improve_sleep'
+          });
+        }
+        if (!answers.sleep_02) {
+          changes.push({
+            type: 'answer',
+            question_id: 'sleep_02',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_improve_sleep'),
+            scenario_id: 'improve_sleep'
+          });
+        }
         break;
         
       case 'reduce_stress':
-        changes.push({
-          type: 'answer',
-          question_id: 'stress_01',
-          new_value: false,
-          description: 'Weniger Stress'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'stress_02',
-          new_value: true,
-          description: 'Zeit für Erholung'
-        });
+        if (answers.stress_01) {
+          changes.push({
+            type: 'answer',
+            question_id: 'stress_01',
+            new_value: false,
+            description: getText('what_if_page.scenario_label_reduce_stress'),
+            scenario_id: 'reduce_stress'
+          });
+        }
+        if (!answers.stress_02) {
+          changes.push({
+            type: 'answer',
+            question_id: 'stress_02',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_reduce_stress'),
+            scenario_id: 'reduce_stress'
+          });
+        }
         break;
         
       case 'increase_social':
-        changes.push({
-          type: 'answer',
-          question_id: 'social_01',
-          new_value: false,
-          description: 'Nicht einsam'
-        });
-        changes.push({
-          type: 'answer',
-          question_id: 'social_02',
-          new_value: true,
-          description: 'Regelmäßiger Kontakt'
-        });
+        if (answers.social_01) {
+          changes.push({
+            type: 'answer',
+            question_id: 'social_01',
+            new_value: false,
+            description: getText('what_if_page.scenario_label_increase_social'),
+            scenario_id: 'increase_social'
+          });
+        }
+        if (!answers.social_02) {
+          changes.push({
+            type: 'answer',
+            question_id: 'social_02',
+            new_value: true,
+            description: getText('what_if_page.scenario_label_increase_social'),
+            scenario_id: 'increase_social'
+          });
+        }
         break;
     }
   });
   
   return changes;
+}
+
+function groupChangesByScenario(changesWithImpact) {
+  const grouped = {};
+  
+  changesWithImpact.forEach(change => {
+    const scenarioId = change.scenario_id || 'other';
+    
+    if (!grouped[scenarioId]) {
+      grouped[scenarioId] = {
+        scenario_id: scenarioId,
+        changes: [],
+        total_realistic_impact: 0,
+        total_theoretical_impact: 0
+      };
+    }
+    
+    grouped[scenarioId].changes.push(change);
+    grouped[scenarioId].total_realistic_impact += (change.realistic_impact || change.impact);
+    grouped[scenarioId].total_theoretical_impact += change.impact;
+  });
+  
+  return Object.values(grouped);
 }
 
 // ========================================
@@ -926,32 +1041,60 @@ function renderComparison() {
     margin-bottom: 40px;
   `;
   
+  // Card 1: Current
   const current = createResultCard(
     getText('what_if_page.current_label'),
     baselineResult.total_life_expectancy.toFixed(1),
     '#95a5a6',
-    'Aktuell'
+    getText('what_if_page.current_label')
   );
   
-  const modified = createResultCard(
-    getText('what_if_page.modified_label'),
-    simulatedResult.modified.toFixed(1),
+  // Card 2: Realistic (age-adjusted)
+  const realistic = createResultCard(
+    getText('what_if_page.realistic_label'),
+    simulatedResult.realistic_modified.toFixed(1),
     '#2ecc71',
-    'Mit Änderungen'
+    getText('what_if_page.with_changes_realistic')
   );
   
+  // Card 3: Difference (realistic)
   const difference = createResultCard(
     getText('what_if_page.difference_label'),
-    simulatedResult.difference >= 0 
-      ? `+${simulatedResult.difference.toFixed(1)}`
-      : simulatedResult.difference.toFixed(1),
-    simulatedResult.difference >= 0 ? '#2ecc71' : '#e74c3c',
-    'Gewinn/Verlust'
+    simulatedResult.realistic_difference >= 0 
+      ? `+${simulatedResult.realistic_difference.toFixed(1)}`
+      : simulatedResult.realistic_difference.toFixed(1),
+    simulatedResult.realistic_difference >= 0 ? '#2ecc71' : '#e74c3c',
+    getText('what_if_page.realistic_gain_label')
   );
   
   container.appendChild(current);
-  container.appendChild(modified);
+  container.appendChild(realistic);
   container.appendChild(difference);
+  
+  // Add info box about theoretical vs realistic
+  const infoBox = document.createElement('div');
+  infoBox.style.cssText = `
+    grid-column: 1 / -1;
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #856404;
+    line-height: 1.6;
+  `;
+  
+  // Use function from texts.js
+  const infoTextFunc = getText('what_if_page.age_adjustment_info');
+  infoBox.innerHTML = infoTextFunc(
+    simulatedResult.theoretical_difference.toFixed(1),
+    baselineResult.age,
+    Math.round(simulatedResult.age_adjustment_factor * 100),
+    100 - Math.round(simulatedResult.damage_adjustment_factor * 100),
+    simulatedResult.realistic_difference.toFixed(1)
+  );
+  
+  container.appendChild(infoBox);
   
   return container;
 }
@@ -1035,7 +1178,7 @@ function renderBreakdown() {
   headerChange.textContent = getText('what_if_page.change_label');
   
   const headerImpact = document.createElement('div');
-  headerImpact.textContent = getText('what_if_page.estimated_impact');
+  headerImpact.textContent = getText('what_if_page.realistic_impact');
   headerImpact.style.textAlign = 'right';
   
   tableHeader.appendChild(headerChange);
@@ -1043,41 +1186,88 @@ function renderBreakdown() {
   
   table.appendChild(tableHeader);
   
-  simulatedResult.changes.forEach(change => {
-    const row = document.createElement('div');
-    row.style.cssText = `
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-      padding: 15px 0;
-      border-bottom: 1px solid #eee;
-    `;
+  // Group changes by scenario
+  const groupedChanges = groupChangesByScenario(simulatedResult.changes);
+  
+  groupedChanges.forEach(group => {
+    // Determine display strategy
+    const shouldGroup = group.changes.length > 1 && 
+                       (group.scenario_id === 'improve_diet' || 
+                        group.scenario_id === 'improve_sleep' ||
+                        group.scenario_id === 'quit_alcohol');
     
-    const changeLabel = document.createElement('div');
-    changeLabel.style.cssText = `
-      font-size: 15px;
-      color: #34495e;
-    `;
-    changeLabel.textContent = change.description || change.question_id;
-    
-    const impactValue = document.createElement('div');
-    impactValue.style.cssText = `
-      text-align: right;
-      font-size: 18px;
-      font-weight: bold;
-      color: ${change.impact >= 0 ? '#2ecc71' : '#e74c3c'};
-    `;
-    impactValue.textContent = `${change.impact >= 0 ? '+' : ''}${change.impact.toFixed(1)} Jahre`;
-    
-    row.appendChild(changeLabel);
-    row.appendChild(impactValue);
-    table.appendChild(row);
+    if (shouldGroup) {
+      // Show grouped summary (use realistic impact)
+      const groupImpact = group.total_realistic_impact;
+      
+      // Only show if total impact > 0.1
+      if (Math.abs(groupImpact) > 0.1) {
+        const row = createBreakdownRow(
+          getScenarioLabel(group.scenario_id),
+          groupImpact,
+          true // isGrouped
+        );
+        table.appendChild(row);
+      }
+    } else {
+      // Show individual changes (use realistic impact)
+      group.changes.forEach(change => {
+        const realisticImpact = change.realistic_impact || change.impact;
+        
+        // Only show if impact > 0.1
+        if (Math.abs(realisticImpact) > 0.1) {
+          const row = createBreakdownRow(
+            change.description || change.question_id,
+            realisticImpact,
+            false // isGrouped
+          );
+          table.appendChild(row);
+        }
+      });
+    }
   });
   
   container.appendChild(title);
   container.appendChild(table);
   
   return container;
+}
+
+function createBreakdownRow(label, impact, isGrouped) {
+  const row = document.createElement('div');
+  row.style.cssText = `
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+  `;
+  
+  const changeLabel = document.createElement('div');
+  changeLabel.style.cssText = `
+    font-size: 15px;
+    color: #34495e;
+    ${isGrouped ? 'font-weight: 600;' : ''}
+  `;
+  changeLabel.textContent = label;
+  
+  const impactValue = document.createElement('div');
+  impactValue.style.cssText = `
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+    color: ${impact >= 0 ? '#2ecc71' : '#e74c3c'};
+  `;
+  impactValue.textContent = `${impact >= 0 ? '+' : ''}${impact.toFixed(1)} ${getText('what_if_page.years')}`;
+  
+  row.appendChild(changeLabel);
+  row.appendChild(impactValue);
+  
+  return row;
+}
+
+function getScenarioLabel(scenarioId) {
+  return getText(`what_if_page.scenario_label_${scenarioId}`);
 }
 
 function renderVisualization() {
@@ -1109,19 +1299,19 @@ function createComparisonChart() {
     border-radius: 8px;
   `;
   
-  const maxValue = Math.max(baselineResult.total_life_expectancy, simulatedResult.modified);
+  const maxValue = Math.max(baselineResult.total_life_expectancy, simulatedResult.realistic_modified);
   const scale = 100 / maxValue;
   
   const currentBar = createBar(
-    'Aktuell',
+    getText('what_if_page.current_label'),
     baselineResult.total_life_expectancy,
     scale,
     '#95a5a6'
   );
   
   const modifiedBar = createBar(
-    'Mit Änderungen',
-    simulatedResult.modified,
+    getText('what_if_page.with_changes_realistic'),
+    simulatedResult.realistic_modified,
     scale,
     '#2ecc71'
   );
@@ -1158,7 +1348,7 @@ function createBar(label, value, scale, color) {
     font-size: 16px;
     color: ${color};
   `;
-  valueEl.textContent = `${value.toFixed(1)} Jahre`;
+  valueEl.textContent = `${value.toFixed(1)} ${getText('what_if_page.years')}`;
   
   header.appendChild(labelEl);
   header.appendChild(valueEl);
@@ -1210,19 +1400,19 @@ function renderResultActions() {
   `;
   
   const saveButton = createActionButton(
-    '💾 Szenario speichern',
+    getText('what_if_page.save_scenario_button'),
     '#3498db',
     () => saveScenario()
   );
   
   const newButton = createActionButton(
-    '🔄 Neues Szenario',
+    getText('what_if_page.new_scenario_button'),
     '#9b59b6',
     () => resetScenarios()
   );
   
   const profileButton = createActionButton(
-    '📊 Zum Profil',
+    getText('what_if_page.to_profile_button'),
     '#2ecc71',
     () => window.location.href = 'profile.html'
   );
@@ -1302,38 +1492,38 @@ function renderPresetScenarios(container) {
   
   const presets = [
     {
-      name: '🚀 Komplette Transformation',
-      description: 'Alle wichtigen Lifestyle-Faktoren optimiert',
+      name: getText('what_if_page.preset_transformation_name'),
+      description: getText('what_if_page.preset_transformation_desc'),
       scenarios: ['quit_smoking', 'lose_weight_10', 'start_exercise', 'improve_diet', 'reduce_stress', 'improve_sleep'],
       color: '#2ecc71'
     },
     {
-      name: '💪 Fitness Focus',
-      description: 'Bewegung, Ernährung, Schlaf',
+      name: getText('what_if_page.preset_fitness_name'),
+      description: getText('what_if_page.preset_fitness_desc'),
       scenarios: ['start_exercise', 'improve_diet', 'improve_sleep', 'lose_weight_5'],
       color: '#3498db'
     },
     {
-      name: '🚭 Rauch-Stopp Plus',
-      description: 'Rauchen aufhören + gesünderer Lifestyle',
+      name: getText('what_if_page.preset_smokestop_name'),
+      description: getText('what_if_page.preset_smokestop_desc'),
       scenarios: ['quit_smoking', 'start_exercise', 'reduce_stress'],
       color: '#e74c3c'
     },
     {
-      name: '🧘 Stress-Management',
-      description: 'Stress, Schlaf, Soziales optimieren',
+      name: getText('what_if_page.preset_stress_name'),
+      description: getText('what_if_page.preset_stress_desc'),
       scenarios: ['reduce_stress', 'improve_sleep', 'increase_social'],
       color: '#9b59b6'
     },
     {
-      name: '🥗 Ernährungs-Boost',
-      description: 'Mediterrane Ernährung + Gewichtsverlust',
+      name: getText('what_if_page.preset_diet_name'),
+      description: getText('what_if_page.preset_diet_desc'),
       scenarios: ['improve_diet', 'lose_weight_5', 'reduce_alcohol'],
       color: '#27ae60'
     },
     {
-      name: '🎯 Quick Wins',
-      description: 'Leicht umsetzbare Änderungen',
+      name: getText('what_if_page.preset_quickwins_name'),
+      description: getText('what_if_page.preset_quickwins_desc'),
       scenarios: ['improve_sleep', 'reduce_alcohol', 'increase_social'],
       color: '#f39c12'
     }
@@ -1418,10 +1608,12 @@ function loadPreset(preset) {
   updateSelectedScenarios();
   renderCalculateButton(document.getElementById('whatif-container'));
   
-  const builderSection = document.querySelector('.scenario-builder-section');
-  if (builderSection) {
-    builderSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  setTimeout(() => {
+    const calculateSection = document.querySelector('.calculate-button-section');
+    if (calculateSection) {
+      calculateSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
 }
 
 // ========================================
@@ -1430,7 +1622,7 @@ function loadPreset(preset) {
 
 function saveScenario() {
   if (!simulatedResult || currentScenarios.length === 0) {
-    alert('Bitte berechne erst ein Szenario.');
+    alert(getText('what_if_page.error_calculate_first'));
     return;
   }
   
@@ -1445,7 +1637,7 @@ function saveScenario() {
   localStorage.setItem('dr_livelong_scenarios', JSON.stringify(saved));
   
   alert(getText('what_if_page.scenario_saved')
-    .replace('{gain}', simulatedResult.difference.toFixed(1))
+    .replace('{gain}', simulatedResult.realistic_difference.toFixed(1))
     .replace('{count}', currentScenarios.length));
 }
 

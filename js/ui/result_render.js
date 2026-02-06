@@ -62,6 +62,7 @@ export function renderResult() {
   renderHeader(container, summary);
   renderLifeExpectancy(container, summary, calculation);
   renderComparison(container, summary, calculation);
+  renderRiskAlert(container, calculation);
   renderTopFactors(container, summary, calculation);
   renderNextSteps(container, summary);
   renderDisclaimer(container);
@@ -300,6 +301,193 @@ function renderPercentileBar(percentile) {
   }, 100);
   
   return container;
+}
+// ========================================
+// RISK ALERT EYECATCHER (FREE ONLY)
+// ========================================
+
+function renderRiskAlert(container, calculation) {
+  console.log('=== RISK ALERT DEBUG ===');
+  console.log('Calculation:', calculation);
+  console.log('Calculation.factors:', calculation.factors);
+  
+  // FORCE SHOW for testing
+  const FORCE_SHOW = true;
+  
+  // Convert factors to array if it's an object
+  let factorsArray;
+  if (Array.isArray(calculation.factors)) {
+    factorsArray = calculation.factors;
+  } else if (calculation.factors && typeof calculation.factors === 'object') {
+    factorsArray = Object.values(calculation.factors);
+  } else {
+    console.log('NO FACTORS FOUND!');
+    return;
+  }
+  
+  console.log('Factors array:', factorsArray);
+  
+  // Count factors with penalty < 0
+  const riskFactors = factorsArray.filter(f => f.penalty && f.penalty < 0);
+  console.log('Risk factors (penalty < 0):', riskFactors);
+  
+  const riskCount = riskFactors.length;
+  console.log('Risk count:', riskCount);
+  
+  // Sum all negative penalties
+  const totalPenalty = riskFactors.reduce((sum, f) => sum + Math.abs(f.penalty), 0);
+  console.log('Total penalty:', totalPenalty);
+  
+  const totalYears = Math.round(totalPenalty);
+  console.log('Total years:', totalYears);
+  
+  // Don't show if no risks (UNLESS force show)
+  if (!FORCE_SHOW && (riskCount === 0 || totalYears === 0)) {
+    console.log('RETURNING - no risks');
+    return;
+  }
+  
+  console.log('CREATING SECTION NOW...');
+  
+  // Rest bleibt gleich...
+  
+  // Create alert section
+  const section = document.createElement('div');
+  section.className = 'risk-alert-section';
+  section.style.cssText = `
+    background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+    border: 3px solid #ff6b6b;
+    border-radius: 16px;
+    padding: 40px;
+    margin: 30px 0;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(255, 107, 107, 0.2);
+    position: relative;
+    overflow: hidden;
+  `;
+  
+  // Background decoration
+  const decoration = document.createElement('div');
+  decoration.style.cssText = `
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+  `;
+  section.appendChild(decoration);
+  
+  // Content container
+  const content = document.createElement('div');
+  content.style.cssText = `
+    position: relative;
+    z-index: 1;
+  `;
+  
+  // Icon
+  const icon = document.createElement('div');
+  icon.style.cssText = `
+    font-size: 72px;
+    margin-bottom: 20px;
+  `;
+  icon.textContent = riskCount >= 5 ? '🚨' : '⚠️';
+  
+  // Headline
+  const headline = document.createElement('h2');
+  headline.style.cssText = `
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: 900;
+  `;
+  
+  const faktorText = riskCount === 1 ? 'Faktor' : 'Faktoren';
+  headline.textContent = `Wir haben ${riskCount} ${faktorText} identifiziert`;
+  
+  // Problem statement
+  const problem = document.createElement('p');
+  problem.style.cssText = `
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #34495e;
+    line-height: 1.6;
+  `;
+  
+  const jahreText = totalYears === 1 ? 'Jahr' : 'Jahre';
+  const kostenText = riskCount === 1 ? 'kostet' : 'kosten';
+  
+  problem.innerHTML = `
+    ${riskCount === 1 ? 'Dieser Faktor' : 'Diese Faktoren'} ${kostenText} 
+    dich aktuell <span style="color: #e74c3c; font-size: 32px; font-weight: 900; display: inline-block; margin: 0 5px;">${totalYears}</span> ${jahreText} Lebenszeit.
+  `;
+  
+  // Solution statement
+  const solution = document.createElement('p');
+  solution.style.cssText = `
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    line-height: 1.6;
+  `;
+  solution.innerHTML = `
+    ✨ Die gute Nachricht: Mit gezielten Änderungen kannst du 
+    bis zu <strong style="color: #27ae60; font-size: 24px;">${totalYears} ${jahreText} zurückgewinnen!</strong>
+  `;
+  
+  // Details
+  const details = document.createElement('p');
+  details.style.cssText = `
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #7f8c8d;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  `;
+  details.textContent = `In der Premium-Version erfährst du konkret welche ${riskCount} ${faktorText} das sind und bekommst einen Schritt-für-Schritt-Plan zur Optimierung.`;
+  
+  // CTA Button
+  const button = document.createElement('button');
+  button.className = 'btn btn-primary btn-large';
+  button.style.cssText = `
+    font-size: 22px;
+    padding: 20px 50px;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    border: none;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+    transition: all 0.3s ease;
+    font-weight: 900;
+  `;
+  button.innerHTML = `🔓 Jetzt Premium freischalten<br><small style="font-size: 16px; font-weight: normal; opacity: 0.9;">Einmalig nur 9,95€</small>`;
+  
+  button.addEventListener('mouseenter', () => {
+    button.style.transform = 'translateY(-3px) scale(1.05)';
+    button.style.boxShadow = '0 10px 30px rgba(46, 204, 113, 0.5)';
+  });
+  
+  button.addEventListener('mouseleave', () => {
+    button.style.transform = 'translateY(0) scale(1)';
+    button.style.boxShadow = '0 6px 20px rgba(46, 204, 113, 0.4)';
+  });
+  
+  button.addEventListener('click', showPaywall);
+  
+  // Assemble content
+  content.appendChild(icon);
+  content.appendChild(headline);
+  content.appendChild(problem);
+  content.appendChild(solution);
+  content.appendChild(details);
+  content.appendChild(button);
+  
+  section.appendChild(content);
+  container.appendChild(section);
 }
 
 // ========================================

@@ -9,11 +9,7 @@ import { STATE, setPaymentStatus, isPaid } from '../core/state.js';
 // DEV MODE CONFIGURATION
 // ========================================
 
-export const DEV_MODE = 
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1' ||
-  window.location.search.includes('dev') ||
-  localStorage.getItem('dr_livelong_dev_mode') === 'true';
+export const DEV_MODE = true;  // ← Testphase: Paywall komplett aus!
 
 if (DEV_MODE) {
   console.log('%c🔓 DEV MODE ACTIVE', 'background: #00ff00; color: #000; font-size: 20px; padding: 10px;');
